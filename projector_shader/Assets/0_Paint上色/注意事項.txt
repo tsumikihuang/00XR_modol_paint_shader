@@ -1,0 +1,7 @@
+如失敗請注意以下
+
+*有無錯誤訊息
+*圖片格式為RBGA32
+*Layer設為ground
+*先給mya材質 再賦予script
+*模型mesh collider裡是否有mesh
