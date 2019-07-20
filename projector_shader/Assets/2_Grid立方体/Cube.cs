@@ -1,4 +1,5 @@
 ﻿//https://zhuanlan.zhihu.com/p/23525545
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,8 @@ public class Cube : MonoBehaviour
 
     private Mesh mesh;
     private Vector3[] vertices;
-    
+    Vector2[] uv;
+
     private void Awake()
     {
         //StartCoroutine(Generate());
@@ -26,8 +28,10 @@ public class Cube : MonoBehaviour
         //WaitForSeconds wait = new WaitForSeconds(0.05f);
         CreateVertices();
         CreateTriangles();
+        Create_UV_Tangent();
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
+
 
     private void CreateTriangles()
     {
@@ -52,7 +56,6 @@ public class Cube : MonoBehaviour
 
         mesh.triangles = triangles;
     }
-
 
     private static int SetQuad(int[] triangles, int i, int v00, int v10, int v01, int v11)      //左下 右下 左上 右上
     {
@@ -129,6 +132,21 @@ public class Cube : MonoBehaviour
             }
         }
         mesh.vertices = vertices;
+    }
+
+    private void Create_UV_Tangent()
+    {
+        uv = new Vector2[vertices.Length];
+
+        float uv_len = (float)Math.Sqrt((uv.Length));
+
+        for (int i = 0; i < uv.Length; i++)
+        {
+            uv[i] = new Vector2((float)i / vertices.Length, ((float)i % uv_len) / uv_len);
+        }        
+
+        mesh.uv = uv;
+
     }
 
     private int CreateTopFace(int[] triangles, int t, int ring)

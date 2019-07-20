@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\0_Paint上色\EditorCoroutineRunner.cs" />
+    <Compile Include="Assets\0_Paint上色\Mesh2Obj.cs" />
     <Compile Include="Assets\0_Paint上色\meshPainter.cs" />
     <Compile Include="Assets\0_Paint上色\meshPainterStyle.cs" />
     <Compile Include="Assets\1_Mesh基础_Procedural Grid\ex_Grid.cs" />
