@@ -311,7 +311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!33 &535654012
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -965,8 +965,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   datPath: Assets/
-  meshGO: {fileID: 1030696018}
-  meshF: {fileID: 1030696023}
+  meshGO: {fileID: 0}
+  meshF: {fileID: 0}
   projectPath: Assets/
 --- !u!4 &1898695799
 Transform:

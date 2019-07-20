@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Control:
-        m_Texture: {fileID: 2800000, guid: 184f9816d715285449a3fdd80f323268, type: 3}
+        m_Texture: {fileID: 2800000, guid: 799265996b7594b45af5cb0228dbe5af, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat2:
-        m_Texture: {fileID: 2800000, guid: abbe972051d82d24fbf65e4d32640994, type: 3}
+        m_Texture: {fileID: 2800000, guid: 58fa6654c5792b940bc9f46a593dd911, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Splat3:

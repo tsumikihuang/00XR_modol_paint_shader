@@ -1,4 +1,6 @@
-﻿//用作自定义脚本的Inspector显示
+﻿
+
+//用作自定义脚本的Inspector显示
 
 //selection參考: https://blog.csdn.net/qq_33337811/article/details/72858209
 
@@ -16,6 +18,7 @@ public class MeshPainterStyle : Editor
 
     bool isPaint;
 
+    static float[,] map = new float[512, 512];    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////NEW
     float brushSize = 16f;
     float brushStronger = 0.5f;
 
@@ -39,6 +42,7 @@ public class MeshPainterStyle : Editor
 
     //Unity的Editor類裏的相關函數，通過對該方法的重寫，可以自定義對Inspector面板的繪制
     public override void OnInspectorGUI()
+
     {
         if (Cheak())
         {
@@ -55,18 +59,8 @@ public class MeshPainterStyle : Editor
             GUILayout.EndHorizontal();
 
             brushSize = (int)EditorGUILayout.Slider("Brush Size", brushSize, 1, 36);//笔刷大小
-            brushStronger = EditorGUILayout.Slider("Brush Stronger", brushStronger, 0, 1f);//笔刷强度
 
             IniBrush();
-            layerTex();
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.BeginHorizontal("box", GUILayout.Width(340));
-            //GUILayout.SelectionGrid 选择表格
-            selTex = GUILayout.SelectionGrid(selTex, texLayer, 4, "gridlist", GUILayout.Width(340), GUILayout.Height(86));
-            GUILayout.EndHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -78,20 +72,7 @@ public class MeshPainterStyle : Editor
         }
 
     }
-
-    //获取材质球中的贴图
-    void layerTex()
-    {
-        Transform Select = Selection.activeTransform;
-        texLayer = new Texture[4];
-        //AssetPreview.GetAssetPreview >> 获取对象的预览图
-        //從該物件中讀取其shader內的貼圖
-        texLayer[0] = AssetPreview.GetAssetPreview(Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Splat0")) as Texture;
-        texLayer[1] = AssetPreview.GetAssetPreview(Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Splat1")) as Texture;
-        texLayer[2] = AssetPreview.GetAssetPreview(Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Splat2")) as Texture;
-        texLayer[3] = AssetPreview.GetAssetPreview(Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Splat3")) as Texture;
-    }
-
+    
     //获取笔刷  
     void IniBrush()
     {
@@ -110,7 +91,7 @@ public class MeshPainterStyle : Editor
             BrushNum++;
         } while (BrushesTL);
 
-        brushTex = BrushList.ToArray(typeof(Texture)) as Texture[];
+        brushTex = BrushList.ToArray(typeof(Texture)) as Texture[];//ToArray是將ArrayList轉成array(Texture[])
     }
 
     //检查
@@ -125,7 +106,7 @@ public class MeshPainterStyle : Editor
         Texture ControlTex = Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Control");
 
         //確認是否使用指定的紋理
-        if (Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.shader == Shader.Find("mya/terrainTextrueBlend") || Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.shader == Shader.Find("Mya/texBlend/mya_4tex_blend_normal"))
+        if (Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.shader == Shader.Find("mya/terrainTextrueBlend"))
         //if (Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.shader == Shader.Find("Mya/texBlend/mya_4tex_blend_diffuce") || Select.gameObject.GetComponent<MeshRenderer>().sharedMaterial.shader == Shader.Find("Mya/texBlend/mya_4tex_blend_normal"))
         {
             if (ControlTex == null)
@@ -152,13 +133,17 @@ public class MeshPainterStyle : Editor
     //创建Contol贴图
     void creatContolTex()
     {
+        for (int i = 0; i < 512; i++)
+            for (int j = 0; j < 512; j++)
+                map[i, j] = 0f;
+
         //创建一个新的Contol贴图
         string ContolTexFolder = "Assets/0_Paint上色/MeshPaint/Controler/";
         Texture2D newMaskTex = new Texture2D(512, 512, TextureFormat.ARGB32, true);
         Color[] colorBase = new Color[512 * 512];
-        for (int t = 0; t < colorBase.Length; t++)  //每一點都是紅色
+        for (int t = 0; t < colorBase.Length; t++)  //每一點都是白色
         {
-            colorBase[t] = new Color(1, 0, 0, 0);
+            colorBase[t] = new Color(252, 255, 255, 0);
         }
         newMaskTex.SetPixels(colorBase);            //將Color給Texture2D
 
@@ -219,13 +204,13 @@ public class MeshPainterStyle : Editor
         MeshFilter temp = CurrentSelect.GetComponent<MeshFilter>();
 
         //圓的大小
-        //笔刷在模型上的正交大小 = float(1-36)   *   當前物體x的scale值    *   当前物體的MeshFilter的x大小  /  200
+      //笔刷在模型上的正交大小 = float(1-36)   *   當前物體x的scale值    *   当前物體的MeshFilter的x大小  /  200
         float orthographicSize = (brushSize * CurrentSelect.localScale.x) * (temp.sharedMesh.bounds.size.x / 200);
         
         //从材质球中获取Control贴图
         MaskTex = (Texture2D)CurrentSelect.gameObject.GetComponent<MeshRenderer>().sharedMaterial.GetTexture("_Control");
 
-        //笔刷在模型上的直徑大小 = (int)四捨五入 <  float(1-36)  *  Control贴图寬度  /  100    >
+      //笔刷在模型上的直徑大小 = (int)四捨五入 <  float(1-36)  *  Control贴图寬度  /  100    >
         brushSizeInPourcent = (int)Mathf.Round((brushSize * MaskTex.width) / 100); 
 
         bool ToggleF = false;
@@ -244,8 +229,11 @@ public class MeshPainterStyle : Editor
             //鼠标点击或按下并拖动进行绘制
             if ((e.type == EventType.MouseDrag && e.alt == false && e.control == false && e.shift == false && e.button == 0) || (e.type == EventType.MouseDown && e.shift == false && e.alt == false && e.control == false && e.button == 0 && ToggleF == false))
             {
-                Vector2 pixelUV = raycastHit.textureCoord;
-                EditorCoroutineRunner.StartEditorCoroutine(Draw(pixelUV));
+                //选择绘制的通道
+                
+                Vector2 pixelUV = raycastHit.textureCoord;          //取得raycast點到的 纹理坐标(0~1)
+                //EditorCoroutineRunner.StartEditorCoroutine(Draw(pixelUV));
+                Draw(pixelUV);
                 ToggleF = true;
             }
 
@@ -258,31 +246,12 @@ public class MeshPainterStyle : Editor
         }
     }
 
-    private IEnumerator Draw(Vector2 pixelUV)
+    //private IEnumerator Draw(Vector2 pixelUV)
+    private void Draw(Vector2 pixelUV)
     {
-        yield return null;
+        //yield return null;
 
-        //选择绘制的通道
-        Color targetColor = new Color(1f, 0f, 0f, 0f);
-        switch (selTex)                                     //選擇的是第幾個texture
-        {
-            case 0:
-                targetColor = new Color(1f, 0f, 0f, 0f);    //紅
-                break;
-            case 1:
-                targetColor = new Color(0f, 1f, 0f, 0f);    //綠
-                break;
-            case 2:
-                targetColor = new Color(0f, 0f, 1f, 0f);    //藍
-                break;
-            case 3:
-                targetColor = new Color(0f, 0f, 0f, 1f);    //A
-                break;
-
-        }
-
-        //移到前面放了
-        //Vector2 pixelUV = raycastHit.textureCoord;          //取得raycast點到的 纹理坐标(0~1)
+        Color targetColor = new Color(1f, 1f, 1f, 0f);
 
         //计算笔刷所覆盖的区域
 
@@ -299,42 +268,62 @@ public class MeshPainterStyle : Editor
 
         //获取Control贴图被笔刷所覆盖的区域的颜色，左到右，上到下
         Color[] terrainBay = MaskTex.GetPixels(x, y, width, height, 0);     //Texture2D.GetPixels 获取一块像素颜色
-
-        Texture2D TBrush = brushTex[selBrush] as Texture2D;                         //获取笔刷性状贴图
+        Texture2D TBrush = brushTex[selBrush] as Texture2D;
+        
         float[] brushAlpha = new float[brushSizeInPourcent * brushSizeInPourcent];  //笔刷透明度
-
-        //根据笔刷贴图计算笔刷的透明度
+                                                                                    //根据笔刷贴图计算笔刷的透明度
         for (int i = 0; i < brushSizeInPourcent; i++)
         {
             for (int j = 0; j < brushSizeInPourcent; j++)
             {
                 //Texture2D.GetPixelBilinear  获取双线性像素颜色
-                brushAlpha[j * brushSizeInPourcent + i] = TBrush.GetPixelBilinear(((float)i) / brushSizeInPourcent,
-                                                                                                        ((float)j) / brushSizeInPourcent).a;
+                brushAlpha[j * brushSizeInPourcent + i] = TBrush.GetPixelBilinear(  ((float)i) / brushSizeInPourcent  ,  ((float)j) / brushSizeInPourcent  ).a;
             }
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////NEW
 
-        //计算绘制后的颜色
-        for (int i = 0; i < height; i++)
+        for (int j = y; j < (y + height); j++)
         {
-            for (int j = 0; j < width; j++)
+            for (int i = x; i < (x + width); i++)
             {
-                int index = (i * width) + j;
-                float Stronger = brushAlpha[Mathf.Clamp((y + i) - (PuY - brushSizeInPourcent / 2), 0,
-                                    brushSizeInPourcent - 1) * brushSizeInPourcent + Mathf.Clamp((x + j) - (PuX - brushSizeInPourcent / 2),
-                                                                                                    0, brushSizeInPourcent - 1)] * brushStronger;
+                
+                int index = ((j - y) * width) + i - x;
 
-                terrainBay[index] = Color.Lerp(terrainBay[index], targetColor, Stronger);
+                float Stronger = brushAlpha[
+                                            Mathf.Clamp(j - (PuY - brushSizeInPourcent / 2), 0, brushSizeInPourcent - 1) * brushSizeInPourcent
+                                            + Mathf.Clamp(i - (PuX - brushSizeInPourcent / 2), 0, brushSizeInPourcent - 1)
+                                            ];
+
+                map[i, j] += 10* Stronger;
+
+                if (map[i, j] >= 0 && map[i, j] <= 255)
+                    targetColor = new Color(1, 1, 1 - map[i, j] % 255 / 255);    //white >> yello
+                else if (map[i, j] > 255 && map[i, j] <= 255 * 2)
+                    targetColor = new Color(1 - map[i, j] % 255 / 255, 1, 0);    //yello >> green
+                else if (map[i, j] > 255 * 2 && map[i, j] <= 255 * 3)
+                    targetColor = new Color(0, 1, map[i, j] % 255 / 255);
+                else if (map[i, j] > 255 * 3 && map[i, j] <= 255 * 4)
+                    targetColor = new Color(0, 1 - map[i, j] % 255 / 255, 1);
+                else if (map[i, j] > 255 * 4 && map[i, j] <= 255 * 5)
+                    targetColor = new Color(map[i, j] % 255 / 255, 0, 1);
+                else if (map[i, j] > 255 * 5 && map[i, j] <= 255 * 6)
+                    targetColor = new Color(1, 0, 1 - map[i, j] % 255 / 255);
+                else
+                    targetColor = new Color(1, 0, 0);
+
+                terrainBay[index] = Color.Lerp(terrainBay[index], targetColor, Stronger); ;
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Undo.RegisterCompleteObjectUndo(MaskTex, "meshPaint");//保存历史记录以便撤销
 
         MaskTex.SetPixels(x, y, width, height, terrainBay, 0);//把绘制后的Control贴图保存起来
         MaskTex.Apply();
-        //ToggleF = true;
     }
 
-    public void SaveTexture()
+        public void SaveTexture()
     {
         var path = AssetDatabase.GetAssetPath(MaskTex);
         var bytes = MaskTex.EncodeToPNG();
