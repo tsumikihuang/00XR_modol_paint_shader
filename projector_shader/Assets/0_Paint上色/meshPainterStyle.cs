@@ -18,6 +18,7 @@ public class MeshPainterStyle : Editor
 
     bool isPaint;
 
+    static bool ToggleF = false;
     static float[,] map = new float[512, 512];    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////NEW
     float brushSize = 16f;
     float brushStronger = 0.5f;
@@ -213,7 +214,7 @@ public class MeshPainterStyle : Editor
       //笔刷在模型上的直徑大小 = (int)四捨五入 <  float(1-36)  *  Control贴图寬度  /  100    >
         brushSizeInPourcent = (int)Mathf.Round((brushSize * MaskTex.width) / 100); 
 
-        bool ToggleF = false;
+        //bool ToggleF = false;
         Event e = Event.current;//检测输入，Event.current当前窗口的事件
 
         //不想让SceneView视图接收鼠标点击选择事件，只希望在Hierarchy视图选择
@@ -232,24 +233,25 @@ public class MeshPainterStyle : Editor
                 //选择绘制的通道
                 
                 Vector2 pixelUV = raycastHit.textureCoord;          //取得raycast點到的 纹理坐标(0~1)
-                //EditorCoroutineRunner.StartEditorCoroutine(Draw(pixelUV));
-                Draw(pixelUV);
+                EditorCoroutineRunner.StartEditorCoroutine(Draw(pixelUV));
+                //Draw(pixelUV);
                 ToggleF = true;
             }
-
-            else if (e.type == EventType.MouseUp && e.alt == false && e.button == 0 && ToggleF == true)
-            {
-
-                SaveTexture();//绘制结束保存Control贴图
-                ToggleF = false;
-            }
+            
         }
+        else if (e.type == EventType.Layout && e.alt == false && e.button == 0 && ToggleF == true)
+        {
+
+            SaveTexture();//绘制结束保存Control贴图
+            ToggleF = false;
+        }
+
     }
 
-    //private IEnumerator Draw(Vector2 pixelUV)
-    private void Draw(Vector2 pixelUV)
+    private IEnumerator Draw(Vector2 pixelUV)
+    //private void Draw(Vector2 pixelUV)
     {
-        //yield return null;
+        yield return null;
 
         Color targetColor = new Color(1f, 1f, 1f, 0f);
 
@@ -311,7 +313,7 @@ public class MeshPainterStyle : Editor
                 else
                     targetColor = new Color(1, 0, 0);
 
-                terrainBay[index] = Color.Lerp(terrainBay[index], targetColor, Stronger); ;
+                terrainBay[index] = Color.Lerp(terrainBay[index], targetColor, Stronger);
             }
         }
 
@@ -329,6 +331,6 @@ public class MeshPainterStyle : Editor
         var bytes = MaskTex.EncodeToPNG();
         File.WriteAllBytes(path, bytes);
 
-        AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);//刷新
+        //AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);//刷新
     }
 }
