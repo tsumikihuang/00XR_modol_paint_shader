@@ -12,6 +12,7 @@ using System.Collections;
 [CustomEditor(typeof(meshPainter))] //自定义编辑脚本Inspector面板。宣告這個 Editor Script 是為了編輯哪個類別
 [CanEditMultipleObjects]            //可以一起编辑多个物体
 
+//public class MeshPainterStyle : MonoBehaviour
 public class MeshPainterStyle : Editor
 {
     string contolTexName = "";
@@ -43,9 +44,10 @@ public class MeshPainterStyle : Editor
 
     //Unity的Editor類裏的相關函數，通過對該方法的重寫，可以自定義對Inspector面板的繪制
     public override void OnInspectorGUI()
-
+    //private void Update()
     {
         if (Cheak())
+        //if (true)
         {
             //得到Button样式
             GUIStyle boolBtnOn = new GUIStyle(GUI.skin.GetStyle("Button"));

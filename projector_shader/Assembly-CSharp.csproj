@@ -70,8 +70,13 @@
     <Compile Include="Assets\2_Grid立方体\6個面生成\Grid.cs" />
     <Compile Include="Assets\2_Grid立方体\Cube.cs" />
     <Compile Include="Assets\2_Grid立方体\RoundedCube.cs" />
+    <Compile Include="Assets\3_verticeColor\ExampleClass.cs" />
+    <Compile Include="Assets\3_verticeColor\putColor.cs" />
+    <Compile Include="Assets\3_verticeColor\test.cs" />
     <None Include="Assets\0_Paint上色\mya\mya.shader" />
     <None Include="Assets\0_Paint上色\注意事項.txt" />
+    <None Include="Assets\注意事項.txt" />
+    <None Include="Assets\3_verticeColor\shader.shader" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/user/Documents/GitHub/modol_paint_shader/projector_shader/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

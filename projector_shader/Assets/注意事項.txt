@@ -1,0 +1,3 @@
+被偵測物件
+不可含有collider
+但須有mesh collider、mesh renderer
