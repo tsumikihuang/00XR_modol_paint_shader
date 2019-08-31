@@ -72,34 +72,6 @@ public class ExampleClass : MonoBehaviour
     {
         times += 10;
         return new Color(1, 0, 0);
-
-        //white >> yello        (1,1,1) >> (1,1,0)
-        if (times >= 0 && times <= 255)
-            return new Color(1, 1, 1 - times % 255 / 255);
-
-        //yello >> green        (1,1,0) >> (0,1,0)
-        else if (times > 255 && times <= 255 * 2)
-            return new Color(1 - times % 255 / 255, 1, 0);
-
-        //green >> blue         (0,1,0) >> (0,1,1)
-        else if (times > 255 * 2 && times <= 255 * 3)
-            return new Color(0, 1, times % 255 / 255);
-
-        //blue >> dark blue     (0,1,1) >> (0,0,1)
-        else if (times > 255 * 3 && times <= 255 * 4)
-            return new Color(0, 1 - times % 255 / 255, 1);
-
-        //dark blue >> purple   (0,0,1) >> (1,0,1)
-        else if (times > 255 * 4 && times <= 255 * 5)
-            return new Color(times % 255 / 255, 0, 1);
-
-        //purple >> red         (1,0,1) >> (1,0,0)
-        else if (times > 255 * 5 && times <= 255 * 6)
-            return new Color(1, 0, 1 - times % 255 / 255);
-
-        //more is red
-        else
-            return new Color(1, 0, 0);
         
     }
 }
