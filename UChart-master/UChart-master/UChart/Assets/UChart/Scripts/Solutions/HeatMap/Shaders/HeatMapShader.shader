@@ -48,6 +48,7 @@
 
 			half4 frag(v2f input):COLOR
 			{
+				//return float4(1,1,1/_Factors[0].z,1);
 				half heat = 0;
 				for( int i = 0 ; i < _FactorCount;i++ )
 				{
