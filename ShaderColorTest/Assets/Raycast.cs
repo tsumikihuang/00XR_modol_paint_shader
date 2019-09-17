@@ -2,13 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Raycast : MonoBehaviour
 {
+    //還需紀錄該點的時間
+    //可是如果要記時間的話，相同位置的點的次數就不能合併在一起了!! >> 會多消耗一些效能，EX.shader讀取的資料數增加
+    //不過實務上，並不需要即時繪圖，只需將資料儲存。最後用另一場景(畫面)將資料視覺化，EX.在不同時間、空間區間內，顯示相對應的熱點
+    //透過空白鍵，開始偵測(錄製)視線產生熱點。再按一次空白鍵，停止偵測(錄製)。
+    //按下"視覺化"按鈕，進入資料視覺化畫面(寫於StateBoard.cs)
+    
     public List<Vector4> tempStructureList = new List<Vector4>();
 
     Camera cam;
-    bool isWaiting = false;
+    bool recordMode = false;
+    public Text recordState;
 
     void Start()
     {
@@ -16,24 +24,25 @@ public class Raycast : MonoBehaviour
         cam = GetComponent<Camera>();
     }
 
-    private float m_timer = 0.0f;
-    private float interval = 0.5f;
-
     void Update()
     {
-        Paint();
-        /*m_timer += Time.deltaTime;
-        if (!isWaiting && m_timer > interval )
+        if (Input.GetKeyDown(KeyCode.Space))    //開始暫停錄製
         {
-            isWaiting = true;
-            m_timer = 0.0f;
-            Paint();
+            recordMode = !recordMode;
+            if (recordMode)
+            {
+                recordState.text = "停止錄製 [Space]";
+                recordState.color = Color.red;
+            }
+            else
+            {
+                recordState.text = "開始錄製 [Space]";
+                recordState.color = Color.black;
+            }
         }
-        else return;
-        /*if (Input.GetKeyDown(KeyCode.B))    //產生射線
-        {
+
+        if(recordMode)
             Paint();
-        }*/
     }
 
     void Paint()
@@ -48,7 +57,6 @@ public class Raycast : MonoBehaviour
         AddCountInList(new_p);
 
         hotSpot.HS_Vector_list = FormatPointInfo();
-        isWaiting = false;
     }
 
     void AddCountInList(Vector4 p)

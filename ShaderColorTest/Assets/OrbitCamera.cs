@@ -4,7 +4,7 @@ using System.Collections;
 public class OrbitCamera : MonoBehaviour
 {
     public Transform target;
-    private float distance = 30.0f;
+    private float distance = 50.0f;
 
     [Header("Drag Parameter")]
     public float xSpeed = 70.0f;

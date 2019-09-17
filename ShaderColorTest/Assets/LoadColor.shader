@@ -12,7 +12,7 @@
 			Blend SrcAlpha OneMinusSrcAlpha
 			ZTest[unity_GUIZTestMode]
 			ZWrite On
-			// Cull off
+			//Cull off		//開啟即有雙面
 
 			Pass
 			{
@@ -72,8 +72,6 @@
 
 						value = tex1D(array, (i++)*p).rgba;			//tex1D 一维纹理查询
 
-						//return value;
-
 						tempX = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
 						if (floor(value.a * 10 + 0.5) == 10)
 							tempX = tempX * (-1);
@@ -88,20 +86,18 @@
 						if (floor(value.a * 10 + 0.5) == 10)
 							tempZ = tempZ * (-1);
 
-						//return float4(1/ float(tempX), 1, 1 / tempZ, 1);
-
 						value = tex1D(array, (i++)*p).rgba;
 						now_point.count = value.r * 1000 + value.g * 100 + value.b * 10 + value.a;
 
 						now_point.pos = float3(tempX, tempY, tempZ);
 
 						float dis = distance(input.worldPos, now_point.pos);	// 此點 和 重點點，兩點間距離
-						//return float4(dis, dis, dis, 1);
-						//若有時間可改用高斯函數
-						float ratio = 1 - saturate(dis / _Radius) * saturate(dis / _Radius);	// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						//heat += (now_point.count / _MaxCount) * ratio;						// 熱度 = 亮度??(改成次數占比) * 距離比例
-						heat += now_point.count * ratio;						// 熱度 = 亮度??(改成次數占比) * 距離比例
-						//heat += ratio;						// 熱度 = 亮度??(改成次數占比) * 距離比例
+
+																				//若有時間可改用高斯函數
+						float ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
+						
+						//heat += (now_point.count / _MaxCount) * ratio;		// 熱度 = 亮度??(改成次數占比) * 距離比例
+						heat += now_point.count * ratio * ratio;				// 熱度 = 亮度??(改成次數占比) * 距離比例
 					}
 
 					heat = clamp(heat, 0.05, 0.95);							// heat 介於 0 ~ 1

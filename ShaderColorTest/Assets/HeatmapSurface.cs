@@ -4,8 +4,10 @@ using System.IO;
 using UnityEngine;
 
 public class HeatmapSurface : MonoBehaviour
-{ 
-    #region 變數們
+{
+    private float influenceRadius = 5.0f;   // 热力影响半径
+
+    #region material
     private Material m_material = null;
     public Material material
     {
@@ -21,8 +23,6 @@ public class HeatmapSurface : MonoBehaviour
             return m_material;
         }
     }
-
-    private float influenceRadius = 1.0f;   // 热力影响半径
     #endregion
 
     private void Start()
@@ -55,7 +55,6 @@ public class HeatmapSurface : MonoBehaviour
             input.SetPixel(i, 0, new Color(colorX, colorY, colorZ, colorW));
         }
         input.Apply();
-
         
         material.SetInt("pixel_count", count);
         material.SetFloat("_Radius", hotSpot.Radius);
