@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scene/Heatmap3D.unity
-  isLoaded: 1
-  isActive: 1
