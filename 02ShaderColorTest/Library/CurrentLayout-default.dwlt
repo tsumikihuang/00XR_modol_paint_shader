@@ -113,7 +113,7 @@ MonoBehaviour:
   m_MinSize: {x: 681, y: 494}
   m_MaxSize: {x: 14004, y: 14044}
   vertical: 1
-  controlID: 12944
+  controlID: 15542
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_MinSize: {x: 681, y: 494}
   m_MaxSize: {x: 14004, y: 14044}
   vertical: 0
-  controlID: 12945
+  controlID: 15543
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -163,7 +163,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 494}
   m_MaxSize: {x: 10002, y: 14044}
   vertical: 1
-  controlID: 13047
+  controlID: 15544
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 222}
   m_MaxSize: {x: 8004, y: 4022}
   vertical: 0
-  controlID: 13048
+  controlID: 15545
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -293,7 +293,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 294}
   m_MaxSize: {x: 4002, y: 8044}
   vertical: 1
-  controlID: 12946
+  controlID: 15494
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -407,7 +407,7 @@ MonoBehaviour:
       y: 17
       width: 713
       height: 420
-    m_Scale: {x: 1.2874997, y: 1.2874999}
+    m_Scale: {x: 1.2667699, y: 1.2667699}
     m_Translation: {x: 356.5, y: 210}
     m_MarginLeft: 0
     m_MarginRight: 0
@@ -415,10 +415,10 @@ MonoBehaviour:
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -276.89328
-      y: -163.10681
-      width: 553.78656
-      height: 326.21362
+      x: -281.42444
+      y: -165.77597
+      width: 562.8489
+      height: 331.55194
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_TargetTexture: {fileID: 0}
@@ -490,9 +490,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -3.6283722, y: -15.329055, z: 154.97949}
+    m_Target: {x: -69.1, y: 0, z: 0}
     speed: 2
-    m_Value: {x: -3.6283722, y: -15.329055, z: 154.97949}
+    m_Value: {x: -69.1, y: 0, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -521,13 +521,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.19091502, y: 0.1762022, z: -0.03485719, w: -0.96503645}
+    m_Target: {x: -0.44602478, y: -0.19145022, z: 0.098290704, w: -0.8687672}
     speed: 2
-    m_Value: {x: -0.190915, y: 0.1762022, z: -0.03485719, w: -0.96503645}
+    m_Value: {x: -0.44602478, y: -0.19145022, z: 0.098290704, w: -0.8687672}
   m_Size:
-    m_Target: 398.58728
+    m_Target: 132.53134
     speed: 2
-    m_Value: 398.58728
+    m_Value: 132.53134
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -592,20 +592,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Resources
   m_ViewMode: 1
   m_StartGridSize: 67
   m_LastFolders:
-  - Assets
+  - Assets/Resources
   m_LastFoldersGridSize: 67
-  m_LastProjectPath: D:\GitHub\modol_paint_shader\ShaderColorTest
+  m_LastProjectPath: D:\GitHub\modol_paint_shader\02ShaderColorTest
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 9a2c0000
-    m_LastClickedID: 11418
-    m_ExpandedIDs: 000000009a2c000000ca9a3b
+    m_SelectedIDs: 2a2d0000
+    m_LastClickedID: 11562
+    m_ExpandedIDs: 000000009c2c000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -633,7 +633,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 6e3f0000
     m_LastClickedID: 16238
-    m_ExpandedIDs: 000000009a2c000000ca9a3b
+    m_ExpandedIDs: 000000009c2c000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -744,9 +744,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 5c300000
-      m_LastClickedID: 12380
-      m_ExpandedIDs: 7c67feff78fbffffbe2f0000f42f0000243000007e300000
+      m_SelectedIDs: 0294feff
+      m_LastClickedID: -93182
+      m_ExpandedIDs: d2ebfeff78fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

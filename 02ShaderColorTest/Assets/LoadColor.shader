@@ -108,12 +108,14 @@
 						}
 					}
 
-					if (heat == 0) {
-						fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
-						fixed3 worldNormal = normalize(input.worldNormal);
-						fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
-						fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
+					fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
+					fixed3 worldNormal = normalize(input.worldNormal);
+					fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
+					//fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
+					fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir*0.5));
 
+					if (heat == 0) {
+						
 						fixed3 color = ambient + diffuse;
 
 						return fixed4(color, 1.0);
@@ -121,10 +123,12 @@
 					heat = clamp(heat, 0.05, 0.95);
 
 					//tex2D在一张贴图中对一个点进行采样的方法，返回一个float4
-					float4 color = tex2D(_HeatMapTex,fixed2(heat,0.5));			//_HeatMapTex是一個色階圖。 tex2D 二维纹理查询，此點彩色x看heat值，y為0.5不變
-
-					color.a = _Alpha;
-					return color;
+					float3 color = tex2D(_HeatMapTex,fixed2(heat,0.5));			//_HeatMapTex是一個色階圖。 tex2D 二维纹理查询，此點彩色x看heat值，y為0.5不變
+					
+					color += (ambient + diffuse);
+					//color.a = _Alpha;
+					//return color;
+					return fixed4(color, 1.0);
 				}
 
 				ENDCG
