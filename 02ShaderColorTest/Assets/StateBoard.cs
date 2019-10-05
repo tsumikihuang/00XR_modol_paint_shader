@@ -23,14 +23,32 @@ using UnityEngine.UI;
 */
 public class StateBoard : MonoBehaviour
 {
+    public static bool recordMode = false;
+    public Text recordState;
+
     void Start()
     {
         
     }
     public Text HotSpot_Num;
+
     void Update()
     {
         HotSpot_Num.text = "" + hotSpot.HS_Vector_list.Length;
+        if (Input.GetKeyDown(KeyCode.Space))    //開始暫停錄製
+        {
+            recordMode = !recordMode;
+            if (recordMode)
+            {
+                recordState.text = "停止錄製 [Space]";
+                recordState.color = Color.red;
+            }
+            else
+            {
+                recordState.text = "開始錄製 [Space]";
+                recordState.color = Color.black;
+            }
+        }
     }
 
     public GameObject SphereSize;

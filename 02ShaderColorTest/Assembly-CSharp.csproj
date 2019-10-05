@@ -65,11 +65,15 @@
     <Compile Include="Assets\FollowOneBall.cs" />
     <Compile Include="Assets\HeatmapSurface.cs" />
     <Compile Include="Assets\hotSpot.cs" />
+    <Compile Include="Assets\KDtree\KDTree.cs" />
+    <Compile Include="Assets\KDtree\KDTreeNode.cs" />
+    <Compile Include="Assets\KDtree\LinkListStack.cs" />
     <Compile Include="Assets\OrbitCamera.cs" />
     <Compile Include="Assets\PassColor.cs" />
     <Compile Include="Assets\Raycast.cs" />
     <Compile Include="Assets\StateBoard.cs" />
     <None Include="Assets\LoadColor.shader" />
+    <None Include="Assets\NoColor.shader" />
     <None Include="Assets\SamerTesting.shader" />
     <None Include="Assets\white.shader" />
     <Reference Include="Unity.Timeline.Editor">

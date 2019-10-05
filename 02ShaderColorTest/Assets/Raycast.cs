@@ -15,8 +15,6 @@ public class Raycast : MonoBehaviour
     public List<Vector4> tempStructureList = new List<Vector4>();
 
     Camera cam;
-    bool recordMode = false;
-    public Text recordState;
 
     void Start()
     {
@@ -26,22 +24,7 @@ public class Raycast : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))    //開始暫停錄製
-        {
-            recordMode = !recordMode;
-            if (recordMode)
-            {
-                recordState.text = "停止錄製 [Space]";
-                recordState.color = Color.red;
-            }
-            else
-            {
-                recordState.text = "開始錄製 [Space]";
-                recordState.color = Color.black;
-            }
-        }
-
-        if(recordMode)
+        if(StateBoard.recordMode)
             Paint();
     }
 
