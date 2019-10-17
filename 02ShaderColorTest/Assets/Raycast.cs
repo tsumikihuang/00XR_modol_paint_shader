@@ -4,28 +4,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class point_info
+{
+    public int vertex_index;    //UpdateModelRecordCount會用到
+    Vector3 point;
+    string model_name;
+
+    public point_info(int _vertex_index, Vector3 _point, string _model_name)
+    {
+        vertex_index = _vertex_index;
+        point = _point;
+        model_name = _model_name;
+    }
+}
+
 public class Raycast : MonoBehaviour
 {
-    //還需紀錄該點的時間
-    //可是如果要記時間的話，相同位置的點的次數就不能合併在一起了!! >> 會多消耗一些效能，EX.shader讀取的資料數增加
-    //不過實務上，並不需要即時繪圖，只需將資料儲存。最後用另一場景(畫面)將資料視覺化，EX.在不同時間、空間區間內，顯示相對應的熱點
-    //透過空白鍵，開始偵測(錄製)視線產生熱點。再按一次空白鍵，停止偵測(錄製)。
-    //按下"視覺化"按鈕，進入資料視覺化畫面(寫於StateBoard.cs)
-    
-    public List<Vector4> tempStructureList = new List<Vector4>();
+    //KBV >> Can Be View
+    public static List<string> KBV_Model_name = new List<string>();
+    public static List<ModelRecord> temp_Data = new List<ModelRecord>();             //用 KBV_Model_name 找到資料庫
+    public static List<point_info> KBV_WorldVertices = new List<point_info>();       //存放所有可以被看到的點，之後要先去做 KD Tree 判斷
+    public static List<point_info> KDT_WorldVertices = new List<point_info>();       //存放 KD Tree 覺得接近的點
 
     Camera cam;
 
     void Start()
     {
-        hotSpot.HS_Vector_list = FormatPointInfo();
+        reCalculateKBV();
+
         cam = GetComponent<Camera>();
     }
 
     void Update()
     {
-        if(StateBoard.recordMode)
+        if (true)
+        {
+            //reCalculateKBV();
             Paint();
+        }
+    }
+
+    void reCalculateKBV()
+    {
+        //第一層---模型過濾(該模型有沒有在視錐體範圍內)
+        //...
+
+        //第二層---vertex是否在screen上可被見
+        //...
+
+        //隨便無作上述動作層(?
+        //model全包
+        //vertices全包
+
+        //先只看單一一個模型
+        KBV_Model_name.Add("gargoyle_simple");
+        temp_Data.Add((ModelRecord)Resources.Load("ModelRecord/" + KBV_Model_name[0], typeof(ModelRecord)));
+        for (int i = 0; i < temp_Data[0].m_Data.number_of_vertices; i++)
+        {
+            point_info temp = new point_info(i, temp_Data[0].m_Data.vertices_world[i], temp_Data[0].m_Data.Model_Name);
+            KBV_WorldVertices.Add(temp);
+        }
+
     }
 
     void Paint()
@@ -36,80 +75,55 @@ public class Raycast : MonoBehaviour
 
         Vector3 p = hit.point;
 
-        Vector3 new_p = new Vector3((float)Math.Round(p.x, 1), (float)Math.Round(p.y, 1), (float)Math.Round(p.z, 1));
-        AddCountInList(new_p);
+        //STEP 1 --- 利用 KD Tree 把靠近的點的 vertice_id 和 model名稱紀錄下來
+        KDT_find_vertices(hit);
 
-        hotSpot.HS_Vector_list = FormatPointInfo();
+        //STEP 2 --- 將對應的modelRecord的count修改
+        UpdateModelRecordCount();
+
     }
 
-    void AddCountInList(Vector4 p)
+    void KDT_find_vertices(RaycastHit _hit)
     {
-        int imatch = tempStructureList.FindIndex(x => x.x == p.x && x.y == p.y && x.z == p.z);
+        //if(滿足KDT)
 
-        if (imatch != -1)
-            tempStructureList[imatch] = new Vector4(tempStructureList[imatch].x, tempStructureList[imatch].y, tempStructureList[imatch].z, tempStructureList[imatch].w + 1);
-        else
-        {
-            tempStructureList.Add(new Vector4(p.x, p.y, p.z, 1));
-            imatch = tempStructureList.Count - 1;
+        //目前只做，把p所在的該三角形的頂點輸出
+        #region 之後應該用不到的部分
+        MeshCollider meshCollider = _hit.collider as MeshCollider;
+        if (meshCollider == null || meshCollider.sharedMesh == null)
+            return;
+        Mesh mesh = meshCollider.sharedMesh;
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+        Vector3 p0 = vertices[triangles[_hit.triangleIndex * 3 + 0]];
+        Vector3 p1 = vertices[triangles[_hit.triangleIndex * 3 + 1]];
+        Vector3 p2 = vertices[triangles[_hit.triangleIndex * 3 + 2]];
+        Transform hitTransform = _hit.collider.transform;
+        p0 = hitTransform.TransformPoint(p0);
+        p1 = hitTransform.TransformPoint(p1);
+        p2 = hitTransform.TransformPoint(p2);
+        Debug.DrawLine(p0, p1, Color.red, 10f, true);
+        Debug.DrawLine(p1, p2, Color.red, 10f, true);
+        Debug.DrawLine(p2, p0, Color.red, 10f, true);
+        #endregion
+        point_info temp1 = new point_info(triangles[_hit.triangleIndex * 3 + 0], p0, meshCollider.gameObject.name);
+        point_info temp2 = new point_info(triangles[_hit.triangleIndex * 3 + 1], p1, meshCollider.gameObject.name);
+        point_info temp3 = new point_info(triangles[_hit.triangleIndex * 3 + 2], p2, meshCollider.gameObject.name);
+
+        KDT_WorldVertices.Add(temp1);
+        KDT_WorldVertices.Add(temp2);
+        KDT_WorldVertices.Add(temp3);
+
+    }
+
+    void UpdateModelRecordCount()
+    {
+        for (int i = 0; i < KDT_WorldVertices.Count; i++) {
+            temp_Data[0].m_Data.count[KDT_WorldVertices[i].vertex_index]++;
+
         }
 
-        CheckMaxSwitch(tempStructureList[imatch].w, ref hotSpot.MaxCount);
     }
 
-    void CheckMaxSwitch(float Temp, ref float MaxValue)
-    {
-        if (Temp > MaxValue)
-            MaxValue = Temp;
-    }
 
-    Vector4[] FormatPointInfo()
-    {
-        Vector4[] list_temp = tempStructureList.ToArray();
-        Vector4[] ans = new Vector4[list_temp.Length * 4];
-
-        for (int i = 0; i < list_temp.Length; i++)
-        {
-            ///x
-            ans[i * 4].w = 5;
-            if (list_temp[i].x < 0)
-            {
-                list_temp[i].x *= (-1);
-                ans[i * 4].w = 10;
-            }
-            ans[i * 4].x = (int)list_temp[i].x / 10;          //x座標的十位數
-            ans[i * 4].y = (int)list_temp[i].x % 10;          //x座標的個位數
-            ans[i * 4].z = (int)(list_temp[i].x * 10) % 10;     //x座標的小數後一位
-
-            ///y
-            ans[i * 4 + 1].w = 5;
-            if (list_temp[i].y < 0)
-            {
-                list_temp[i].y *= (-1);
-                ans[i * 4 + 1].w = 10;
-            }
-            ans[i * 4 + 1].x = (int)list_temp[i].y / 10;
-            ans[i * 4 + 1].y = (int)list_temp[i].y % 10;
-            ans[i * 4 + 1].z = (int)(list_temp[i].y * 10) % 10;
-
-            ///z
-            ans[i * 4 + 2].w = 5;
-            if (list_temp[i].z < 0)
-            {
-                list_temp[i].z *= (-1);
-                ans[i * 4 + 2].w = 10;
-            }
-            ans[i * 4 + 2].x = (int)list_temp[i].z / 10;
-            ans[i * 4 + 2].y = (int)list_temp[i].z % 10;
-            ans[i * 4 + 2].z = (int)(list_temp[i].z * 10) % 10;
-
-            ///w
-            ans[i * 4 + 3].x = (int)list_temp[i].w / 1000;
-            ans[i * 4 + 3].y = (int)list_temp[i].w % 1000 / 100;
-            ans[i * 4 + 3].z = (int)list_temp[i].w % 100 / 10;
-            ans[i * 4 + 3].w = (int)list_temp[i].w % 10;
-        }
-
-        return ans;
-    }
 }

@@ -31,7 +31,7 @@
 				half _Alpha;
 
 				uniform float _Radius;
-				uniform float _MaxCount;
+				//uniform float _MaxCount;
 
 				uniform int pixel_count;
 				uniform sampler1D array;

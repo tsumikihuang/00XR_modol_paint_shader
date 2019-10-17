@@ -23,6 +23,7 @@ using UnityEngine.UI;
 */
 public class StateBoard : MonoBehaviour
 {
+    /*
     public static bool recordMode = false;
     public Text recordState;
 
@@ -100,5 +101,5 @@ public class StateBoard : MonoBehaviour
         PlaneSA = !PlaneSA;
         Plane_obj.SetActive(PlaneSA);
     }
-
+    */
 }
