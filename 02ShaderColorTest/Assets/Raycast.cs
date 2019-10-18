@@ -40,8 +40,15 @@ public class Raycast : MonoBehaviour
         if (true)
         {
             //reCalculateKBV();
+            reCalculateCameraDepth();
             Paint();
         }
+    }
+
+    void reCalculateCameraDepth()
+    {
+        cam.depthTextureMode = DepthTextureMode.Depth;
+        Debug.Log("stop!!");
     }
 
     void reCalculateKBV()

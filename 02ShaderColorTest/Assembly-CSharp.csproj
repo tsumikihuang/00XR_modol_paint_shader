@@ -62,9 +62,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\KDtree\KDTree.cs" />
-    <Compile Include="Assets\KDtree\KDTreeNode.cs" />
-    <Compile Include="Assets\KDtree\LinkListStack.cs" />
+    <Compile Include="Assets\Datastructures\Heap\BaseHeap.cs" />
+    <Compile Include="Assets\Datastructures\Heap\KSmallest.cs" />
+    <Compile Include="Assets\Datastructures\Heap\MaxHeap.cs" />
+    <Compile Include="Assets\Datastructures\Heap\MinHeap.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDBounds.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDNode.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\Base.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\Debug.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\KDQueryNode.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\QueryClosest.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\QueryInterval.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\QueryKNearest.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDQuery\QueryRadius.cs" />
+    <Compile Include="Assets\Datastructures\KDTree\KDTree.cs" />
+    <Compile Include="Assets\Datastructures\Tests\HeapTests.cs" />
+    <Compile Include="Assets\Datastructures\Tests\KDTreeBenchmark.cs" />
+    <Compile Include="Assets\Datastructures\Tests\KDTreeQueryTests.cs" />
     <Compile Include="Assets\ModelRecord.cs" />
     <Compile Include="Assets\OrbitCamera.cs" />
     <Compile Include="Assets\PassColor.cs" />
