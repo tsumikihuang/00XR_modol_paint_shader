@@ -71,7 +71,7 @@ public class SimplificationModel_vertex_count_record : MonoBehaviour
         Scriptable_Data.m_Data.vertices_world = new Vector3[len];
 
         //count
-        Scriptable_Data.m_Data.count = new int[len];
+        Scriptable_Data.m_Data.count = new float[len];
 
         for (int i = 0; i < len; i++)
         {
@@ -114,8 +114,8 @@ public class SimplificationModel_vertex_count_record : MonoBehaviour
                 list_temp[i].x *= (-1);
                 ans[i * 4].w = 10;
             }
-            ans[i * 4].x = (int)list_temp[i].x / 10;          //x座標的十位數
-            ans[i * 4].y = (int)list_temp[i].x % 10;          //x座標的個位數
+            ans[i * 4].x = (int)list_temp[i].x / 10;            //x座標的十位數
+            ans[i * 4].y = (int)list_temp[i].x % 10;            //x座標的個位數
             ans[i * 4].z = (int)(list_temp[i].x * 10) % 10;     //x座標的小數後一位
 
             ///y
@@ -141,10 +141,10 @@ public class SimplificationModel_vertex_count_record : MonoBehaviour
             ans[i * 4 + 2].z = (int)(list_temp[i].z * 10) % 10;
 
             ///w
-            ans[i * 4 + 3].x = (int)list_temp[i].w / 1000;
-            ans[i * 4 + 3].y = (int)list_temp[i].w % 1000 / 100;
-            ans[i * 4 + 3].z = (int)list_temp[i].w % 100 / 10;
-            ans[i * 4 + 3].w = (int)list_temp[i].w % 10;
+            ans[i * 4 + 3].x = (int)list_temp[i].w % 10;                //整數
+            ans[i * 4 + 3].y = (int)(list_temp[i].w * 10) % 10;         //小數點後1位
+            ans[i * 4 + 3].z = (int)(list_temp[i].w * 100) % 100;       //小數點後2位
+            ans[i * 4 + 3].w = (int)(list_temp[i].w * 1000) % 1000;     //小數點後3位
         }
 
         return ans;

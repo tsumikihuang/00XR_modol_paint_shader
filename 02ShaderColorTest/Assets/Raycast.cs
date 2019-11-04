@@ -9,12 +9,14 @@ public class point_info
     public int vertex_index;    //UpdateModelRecordCount會用到
     Vector3 point;
     string model_name;
+    public float weight;
 
-    public point_info(int _vertex_index, Vector3 _point, string _model_name)
+    public point_info(int _vertex_index, Vector3 _point, string _model_name, float _weight)
     {
         vertex_index = _vertex_index;
         point = _point;
         model_name = _model_name;
+        weight = _weight;
     }
 }
 
@@ -41,6 +43,7 @@ public class Raycast : MonoBehaviour
         {
             //reCalculateKBV();
             reCalculateCameraDepth();
+            KDT_WorldVertices.Clear();
             Paint();
         }
     }
@@ -48,7 +51,7 @@ public class Raycast : MonoBehaviour
     void reCalculateCameraDepth()
     {
         cam.depthTextureMode = DepthTextureMode.Depth;
-        Debug.Log("stop!!");
+        //Debug.Log("stop!!");
     }
 
     void reCalculateKBV()
@@ -68,7 +71,7 @@ public class Raycast : MonoBehaviour
         temp_Data.Add((ModelRecord)Resources.Load("ModelRecord/" + KBV_Model_name[0], typeof(ModelRecord)));
         for (int i = 0; i < temp_Data[0].m_Data.number_of_vertices; i++)
         {
-            point_info temp = new point_info(i, temp_Data[0].m_Data.vertices_world[i], temp_Data[0].m_Data.Model_Name);
+            point_info temp = new point_info(i, temp_Data[0].m_Data.vertices_world[i], temp_Data[0].m_Data.Model_Name,0);
             KBV_WorldVertices.Add(temp);
         }
 
@@ -102,9 +105,13 @@ public class Raycast : MonoBehaviour
         Mesh mesh = meshCollider.sharedMesh;
         Vector3[] vertices = mesh.vertices;
         int[] triangles = mesh.triangles;
-        Vector3 p0 = vertices[triangles[_hit.triangleIndex * 3 + 0]];
-        Vector3 p1 = vertices[triangles[_hit.triangleIndex * 3 + 1]];
-        Vector3 p2 = vertices[triangles[_hit.triangleIndex * 3 + 2]];
+        int p0_index = triangles[_hit.triangleIndex * 3 + 0];
+        int p1_index = triangles[_hit.triangleIndex * 3 + 1];
+        int p2_index = triangles[_hit.triangleIndex * 3 + 2];
+
+        Vector3 p0 = vertices[p0_index];
+        Vector3 p1 = vertices[p1_index];
+        Vector3 p2 = vertices[p2_index];
         Transform hitTransform = _hit.collider.transform;
         p0 = hitTransform.TransformPoint(p0);
         p1 = hitTransform.TransformPoint(p1);
@@ -113,21 +120,26 @@ public class Raycast : MonoBehaviour
         Debug.DrawLine(p1, p2, Color.red, 10f, true);
         Debug.DrawLine(p2, p0, Color.red, 10f, true);
         #endregion
-        point_info temp1 = new point_info(triangles[_hit.triangleIndex * 3 + 0], p0, meshCollider.gameObject.name);
-        point_info temp2 = new point_info(triangles[_hit.triangleIndex * 3 + 1], p1, meshCollider.gameObject.name);
-        point_info temp3 = new point_info(triangles[_hit.triangleIndex * 3 + 2], p2, meshCollider.gameObject.name);
+        Vector3 p_hit= hitTransform.TransformPoint(_hit.point);
 
+        float All_area = Vector3.Cross(p1-p0, p2-p0).magnitude / 2;
+        float _area0= Vector3.Cross(p1 - p_hit, p2 - p_hit).magnitude / 2;
+        float _area1= Vector3.Cross(p0 - p_hit, p2 - p_hit).magnitude / 2;
+        float _area2= Vector3.Cross(p0 - p_hit, p1 - p_hit).magnitude / 2;
+        point_info temp0 = new point_info( p0_index, p0, meshCollider.gameObject.name, 1 / _area0);
+        point_info temp1 = new point_info( p1_index, p1, meshCollider.gameObject.name, 1 / _area1);
+        point_info temp2 = new point_info( p2_index, p2, meshCollider.gameObject.name, 1 / _area2);
+
+        KDT_WorldVertices.Add(temp0);
         KDT_WorldVertices.Add(temp1);
         KDT_WorldVertices.Add(temp2);
-        KDT_WorldVertices.Add(temp3);
 
     }
 
     void UpdateModelRecordCount()
     {
         for (int i = 0; i < KDT_WorldVertices.Count; i++) {
-            temp_Data[0].m_Data.count[KDT_WorldVertices[i].vertex_index]++;
-
+            temp_Data[0].m_Data.count[KDT_WorldVertices[i].vertex_index]+= KDT_WorldVertices[i].weight;
         }
 
     }

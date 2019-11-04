@@ -14,7 +14,7 @@ public class Data
     public Vector3[] vertices_world;      //  世界座標  Transform.TransformPoint()
 
     //隨Update更新
-    public int[] count;
+    public float[] count;
     public Vector4[] normalizeDATA_Pass2Shader;
 }
 

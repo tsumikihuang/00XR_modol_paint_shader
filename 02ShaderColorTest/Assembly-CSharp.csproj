@@ -85,9 +85,11 @@
     <Compile Include="Assets\Raycast.cs" />
     <Compile Include="Assets\SimplificationModel_vertex_count_record.cs" />
     <Compile Include="Assets\StateBoard.cs" />
+    <Compile Include="Assets\test\test.cs" />
     <None Include="Assets\LoadColor.shader" />
     <None Include="Assets\NoColor.shader" />
     <None Include="Assets\white.shader" />
+    <None Include="Assets\test\shader.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/GitHub/modol_paint_shader/02ShaderColorTest/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
