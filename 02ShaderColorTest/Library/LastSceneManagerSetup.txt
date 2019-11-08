@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/First.unity
+- path: Assets/test/testForTopVertices.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

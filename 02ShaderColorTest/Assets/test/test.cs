@@ -59,11 +59,11 @@ public class test : MonoBehaviour
         float _area1 = Vector3.Cross(p0 - p_hit, p2 - p_hit).magnitude / 2;
         float _area2 = Vector3.Cross(p0 - p_hit, p1 - p_hit).magnitude / 2;
         ////////////////
-        times[triangles[hit.triangleIndex * 3 + 0]] +=  1 / _area0;
+        times[triangles[hit.triangleIndex * 3 + 0]] += All_area / (30 * _area0);
         StartColor[triangles[hit.triangleIndex * 3 + 0]] = new Color(times[triangles[hit.triangleIndex * 3 + 0]], 0, 0);
-        times[triangles[hit.triangleIndex * 3 + 1]] += 1 / _area1;
+        times[triangles[hit.triangleIndex * 3 + 1]] += All_area / (30 * _area1);
         StartColor[triangles[hit.triangleIndex * 3 + 1]] = new Color(times[triangles[hit.triangleIndex * 3 + 1]], 0, 0);
-        times[triangles[hit.triangleIndex * 3 + 2]] += 1 / _area2;
+        times[triangles[hit.triangleIndex * 3 + 2]] += All_area / (30 * _area2);
         StartColor[triangles[hit.triangleIndex * 3 + 2]] = new Color(times[triangles[hit.triangleIndex * 3 + 2]], 0, 0);
 
 

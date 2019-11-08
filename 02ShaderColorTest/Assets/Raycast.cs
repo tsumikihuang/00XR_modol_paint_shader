@@ -67,7 +67,7 @@ public class Raycast : MonoBehaviour
         //vertices全包
 
         //先只看單一一個模型
-        KBV_Model_name.Add("gargoyle_simple");
+        KBV_Model_name.Add("stanford-bunny (1)");
         temp_Data.Add((ModelRecord)Resources.Load("ModelRecord/" + KBV_Model_name[0], typeof(ModelRecord)));
         for (int i = 0; i < temp_Data[0].m_Data.number_of_vertices; i++)
         {
@@ -126,14 +126,13 @@ public class Raycast : MonoBehaviour
         float _area0= Vector3.Cross(p1 - p_hit, p2 - p_hit).magnitude / 2;
         float _area1= Vector3.Cross(p0 - p_hit, p2 - p_hit).magnitude / 2;
         float _area2= Vector3.Cross(p0 - p_hit, p1 - p_hit).magnitude / 2;
-        point_info temp0 = new point_info( p0_index, p0, meshCollider.gameObject.name, 1 / _area0);
-        point_info temp1 = new point_info( p1_index, p1, meshCollider.gameObject.name, 1 / _area1);
-        point_info temp2 = new point_info( p2_index, p2, meshCollider.gameObject.name, 1 / _area2);
+        point_info temp0 = new point_info( p0_index, p0, meshCollider.gameObject.name, All_area / (_area0 * 3));
+        point_info temp1 = new point_info( p1_index, p1, meshCollider.gameObject.name, All_area / (_area1 * 3));
+        point_info temp2 = new point_info( p2_index, p2, meshCollider.gameObject.name, All_area / (_area2 * 3));
 
         KDT_WorldVertices.Add(temp0);
         KDT_WorldVertices.Add(temp1);
         KDT_WorldVertices.Add(temp2);
-
     }
 
     void UpdateModelRecordCount()

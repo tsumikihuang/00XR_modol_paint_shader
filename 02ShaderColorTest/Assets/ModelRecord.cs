@@ -15,7 +15,8 @@ public class Data
 
     //隨Update更新
     public float[] count;
-    public Vector4[] normalizeDATA_Pass2Shader;
+    //public Vector4[] normalizeDATA_Pass2Shader_xyzw;
+    public Vector4[] normalizeDATA_Pass2Shader_count;
 }
 
 [CreateAssetMenu(fileName ="ModelRecord",menuName ="HeatMap/Create Model Record",order =1)]

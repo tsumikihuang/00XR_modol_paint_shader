@@ -28,11 +28,11 @@ public class SimplificationModel_vertex_count_record : MonoBehaviour
         }*/
     #endregion
 
-    public GameObject origin_obj;
-    private void Start()
+    //public GameObject origin_obj;
+    private void Awake()
     {
         Init_ModelRecord();
-        material = origin_obj.GetComponent<Renderer>().material;
+        material = this.GetComponent<Renderer>().material;
     }
 
     private void Update()
@@ -85,87 +85,70 @@ public class SimplificationModel_vertex_count_record : MonoBehaviour
     public void NewChange()
     {
         //將此 model 的 vertex 資料，整理成 (x,y,z,count)，且數值在0~10
-        Scriptable_Data.m_Data.normalizeDATA_Pass2Shader = FormatVertexInfo();
+        //Scriptable_Data.m_Data.normalizeDATA_Pass2Shader = FormatVertexInfo();
+
+        //大小為vertice數量，只傳vertice count，且數值在0~10
+        Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count = FormatVertexCount();
 
         Draw_with_dynamic_array();
 
     }
     
-    Vector4[] FormatVertexInfo()
+    Vector4[] FormatVertexCount()
     {
-        List<Vector4> temp_record = new List<Vector4>();
-
-        for (int i=0;i< Scriptable_Data.m_Data.number_of_vertices;i++)
-        {
-            if (Scriptable_Data.m_Data.count[i] == 0)
-                continue;
-            temp_record.Add(new Vector4(Scriptable_Data.m_Data.vertices_world[i].x, Scriptable_Data.m_Data.vertices_world[i].y, Scriptable_Data.m_Data.vertices_world[i].z, Scriptable_Data.m_Data.count[i]));
-        }
-
-        Vector4[] list_temp = temp_record.ToArray();
-        Vector4[] ans = new Vector4[list_temp.Length * 4];
-
+        Vector4[] list_temp = new Vector4[Scriptable_Data.m_Data.number_of_vertices];
+        
         for (int i = 0; i < list_temp.Length; i++)
         {
-            ///x
-            ans[i * 4].w = 5;
-            if (list_temp[i].x < 0)
-            {
-                list_temp[i].x *= (-1);
-                ans[i * 4].w = 10;
-            }
-            ans[i * 4].x = (int)list_temp[i].x / 10;            //x座標的十位數
-            ans[i * 4].y = (int)list_temp[i].x % 10;            //x座標的個位數
-            ans[i * 4].z = (int)(list_temp[i].x * 10) % 10;     //x座標的小數後一位
-
-            ///y
-            ans[i * 4 + 1].w = 5;
-            if (list_temp[i].y < 0)
-            {
-                list_temp[i].y *= (-1);
-                ans[i * 4 + 1].w = 10;
-            }
-            ans[i * 4 + 1].x = (int)list_temp[i].y / 10;
-            ans[i * 4 + 1].y = (int)list_temp[i].y % 10;
-            ans[i * 4 + 1].z = (int)(list_temp[i].y * 10) % 10;
-
-            ///z
-            ans[i * 4 + 2].w = 5;
-            if (list_temp[i].z < 0)
-            {
-                list_temp[i].z *= (-1);
-                ans[i * 4 + 2].w = 10;
-            }
-            ans[i * 4 + 2].x = (int)list_temp[i].z / 10;
-            ans[i * 4 + 2].y = (int)list_temp[i].z % 10;
-            ans[i * 4 + 2].z = (int)(list_temp[i].z * 10) % 10;
-
-            ///w
-            ans[i * 4 + 3].x = (int)list_temp[i].w % 10;                //整數
-            ans[i * 4 + 3].y = (int)(list_temp[i].w * 10) % 10;         //小數點後1位
-            ans[i * 4 + 3].z = (int)(list_temp[i].w * 100) % 100;       //小數點後2位
-            ans[i * 4 + 3].w = (int)(list_temp[i].w * 1000) % 1000;     //小數點後3位
+            if (Scriptable_Data.m_Data.count[i] >= 10)
+                Scriptable_Data.m_Data.count[i] = 9.999f;
+            list_temp[i].x = (int)Scriptable_Data.m_Data.count[i] % 10;                //整數
+            list_temp[i].y = (int)(Scriptable_Data.m_Data.count[i] * 10) % 10;         //小數點後1位
+            list_temp[i].z = (int)(Scriptable_Data.m_Data.count[i] * 100) % 100;       //小數點後2位
+            list_temp[i].w = (int)(Scriptable_Data.m_Data.count[i] * 1000) % 1000;     //小數點後3位
         }
 
-        return ans;
+        return list_temp;
     }
 
     public void Draw_with_dynamic_array()
     {
-        int point_num = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader.Length;
-        Texture2D input = new Texture2D(point_num, 1, TextureFormat.RGBA32, false);
+        int point_num = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count.Length;
+        int weight = point_num;
+        if( point_num > 10000)
+            weight = 10000;
+        int height = point_num / 10000 + 1;
+        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBA32, false);
         input.filterMode = FilterMode.Point;
         input.wrapMode = TextureWrapMode.Clamp;
-        for (int i = 0; i < point_num; i++)
+
+        for (int j = 0; j < height; j++)
         {
-            float colorX = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader[i].x / 10.0f;
-            float colorY = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader[i].y / 10.0f;
-            float colorZ = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader[i].z / 10.0f;
-            float colorW = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader[i].w / 10.0f;
-            input.SetPixel(i, 0, new Color(colorX, colorY, colorZ, colorW));
+            for (int i = 0; i < weight; i++)
+            {
+                if(j * 10000 + i >= point_num)
+                {
+                    input.SetPixel(i, j, new Color(0, 0, 0, 0));
+                    continue;
+                }
+                float colorX = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count[j * 10000 + i].x / 10.0f;
+                float colorY = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count[j * 10000 + i].y / 10.0f;
+                float colorZ = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count[j * 10000 + i].z / 10.0f;
+                float colorW = Scriptable_Data.m_Data.normalizeDATA_Pass2Shader_count[j * 10000 + i].w / 10.0f;
+                input.SetPixel(i, j, new Color(colorX, colorY, colorZ, colorW));
+            }
         }
         input.Apply();
-
+        ////////////////////////////////////////////////////////////////////
+        /*var bytes = input.EncodeToPNG();
+        var dirPath = Application.dataPath + "/SaveImages/";
+        if (!Directory.Exists(dirPath))
+        {
+            Directory.CreateDirectory(dirPath);
+        }
+        File.WriteAllBytes(dirPath + "Image333" + ".png", bytes);*/
+        //File.WriteAllBytes(Application.dataPath + "/SaveImages/Image333.png", input.EncodeToPNG());
+        ////////////////////////////////////////////////////////////////////
         material.SetInt("pixel_count", point_num);
         material.SetFloat("_Radius", 5.0f );
         //material.SetFloat("_MaxCount", hotSpot.MaxCount);
