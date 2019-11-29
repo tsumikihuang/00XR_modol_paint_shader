@@ -4,7 +4,7 @@ using System.Collections;
 public class OrbitCamera : MonoBehaviour
 {
     public Transform target;
-    private float distance = 1000.0f;
+    private float distance = 100.0f;
 
     [Header("Drag Parameter")]
     public float xSpeed = 70.0f;
@@ -89,7 +89,7 @@ public class OrbitCamera : MonoBehaviour
         if (target)
         {
             Quaternion rotation = Quaternion.Euler(fy, fx, 0);
-            Vector3 negDistance = new Vector3(0.0f, -10.0f, -distance);
+            Vector3 negDistance = new Vector3(-25.0f, 50.0f, -distance);
 
             /* Quaternion * Vector3    >>  下個位置變化方向，Vector3进行一次Quaternion 旋转
              * 

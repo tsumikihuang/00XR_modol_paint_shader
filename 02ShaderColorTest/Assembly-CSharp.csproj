@@ -79,17 +79,15 @@
     <Compile Include="Assets\Datastructures\Tests\HeapTests.cs" />
     <Compile Include="Assets\Datastructures\Tests\KDTreeBenchmark.cs" />
     <Compile Include="Assets\Datastructures\Tests\KDTreeQueryTests.cs" />
+    <Compile Include="Assets\History.cs" />
+    <Compile Include="Assets\Model_vertex_count_record.cs" />
     <Compile Include="Assets\ModelRecord.cs" />
     <Compile Include="Assets\OrbitCamera.cs" />
-    <Compile Include="Assets\PassColor.cs" />
     <Compile Include="Assets\Raycast.cs" />
-    <Compile Include="Assets\SimplificationModel_vertex_count_record.cs" />
     <Compile Include="Assets\StateBoard.cs" />
-    <Compile Include="Assets\test\test.cs" />
-    <None Include="Assets\LoadColor.shader" />
-    <None Include="Assets\NoColor.shader" />
-    <None Include="Assets\white.shader" />
-    <None Include="Assets\test\shader.shader" />
+    <None Include="Assets\Materials\LoadColor.shader" />
+    <None Include="Assets\Materials\NoColor.shader" />
+    <None Include="Assets\Materials\white.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/GitHub/modol_paint_shader/02ShaderColorTest/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

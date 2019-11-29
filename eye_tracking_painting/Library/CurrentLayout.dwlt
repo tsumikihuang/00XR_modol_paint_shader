@@ -113,7 +113,7 @@ MonoBehaviour:
   m_MinSize: {x: 681, y: 474}
   m_MaxSize: {x: 14002, y: 14024}
   vertical: 1
-  controlID: 82
+  controlID: 27
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_MinSize: {x: 681, y: 474}
   m_MaxSize: {x: 14002, y: 14024}
   vertical: 0
-  controlID: 83
+  controlID: 28
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -163,7 +163,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 474}
   m_MaxSize: {x: 10000, y: 14024}
   vertical: 1
-  controlID: 15
+  controlID: 29
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 224}
   m_MaxSize: {x: 8004, y: 4024}
   vertical: 0
-  controlID: 16
+  controlID: 30
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 298}
   m_MaxSize: {x: 4002, y: 8048}
   vertical: 1
-  controlID: 84
+  controlID: 98
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -634,20 +634,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - "Assets/0_Paint\u4E0A\u8272"
   m_ViewMode: 1
   m_StartGridSize: 67
   m_LastFolders:
-  - Assets
+  - "Assets/0_Paint\u4E0A\u8272"
   m_LastFoldersGridSize: 67
   m_LastProjectPath: D:\GitHub\modol_paint_shader\eye_tracking_painting
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: c6270000
-    m_LastClickedID: 10182
-    m_ExpandedIDs: 00000000c62700000c28000026280000382800006e2800005c290000cc290000242a00008c2a00005c2e00005e2e0000602e0000622e0000642e0000662e0000682e00006a2e00006c2e000000ca9a3b
+    m_SelectedIDs: a00c0000
+    m_LastClickedID: 3232
+    m_ExpandedIDs: 000000009a0a0000e00a0000fa0a00000c0b0000420b0000300c0000a00c0000f80c0000600d0000dc2d0000de2d0000e02d0000e22d0000e42d0000e62d0000e82d0000ea2d0000ec2d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -675,7 +675,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 6e3f0000
     m_LastClickedID: 16238
-    m_ExpandedIDs: 00000000c62700000c28000026280000382800006e2800005c290000cc290000242a00008c2a00005c2e00005e2e0000602e0000622e0000642e0000662e0000682e00006a2e00006c2e0000
+    m_ExpandedIDs: 000000009a0a0000e00a0000fa0a00000c0b0000420b0000300c0000a00c0000f80c0000600d0000dc2d0000de2d0000e02d0000e22d0000e42d0000e62d0000e82d0000ea2d0000ec2d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -702,7 +702,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 802d00007a280000042a00000000000048280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -785,9 +785,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 862d0000
-      m_LastClickedID: 11654
-      m_ExpandedIDs: e4f9ffff
+      m_SelectedIDs: b4090000
+      m_LastClickedID: 0
+      m_ExpandedIDs: d6fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

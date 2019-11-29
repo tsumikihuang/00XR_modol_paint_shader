@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/test/testForTopVertices.unity
-    guid: 8b392b3824d40d94e9bb941454f08b8a
+    path: Assets/Scenes/First.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

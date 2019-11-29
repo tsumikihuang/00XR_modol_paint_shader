@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataStructures.ViliWonka.KDTree;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,8 @@ using UnityEngine.UI;
 public class point_info
 {
     public int vertex_index;    //UpdateModelRecordCount會用到
-    Vector3 point;
-    string model_name;
+    public Vector3 point;
+    public string model_name;
     public float weight;
 
     public point_info(int _vertex_index, Vector3 _point, string _model_name, float _weight)
@@ -22,61 +23,125 @@ public class point_info
 
 public class Raycast : MonoBehaviour
 {
+    #region 可調變數們
+    private float lastTime;
+    public float deltaTime = 1;
+    static float _dTime = 0;
+    [Range(0.5f, 10f)]
+    public float influence_Radius = 5;
+
+    //高斯函數參數：https://www.geogebra.org/graphing/kxg6mru2
+    [Range(0.1f, 5f)]
+    //最高y值
+    public float Gaus_a = 1.0f;
+    //中心位移
+    private float Gaus_b = 0.0f;
+    [Range(0f, 5f)]
+    public float Gaus_c = 3.0f;
+    #endregion
+
     //KBV >> Can Be View
     public static List<string> KBV_Model_name = new List<string>();
-    public static List<ModelRecord> temp_Data = new List<ModelRecord>();             //用 KBV_Model_name 找到資料庫
+    public static List<ModelRecord> KBV_Model_Record = new List<ModelRecord>();             //用 KBV_Model_name 找到資料庫
+    public static List<Model_vertex_count_record> KBV_Model_vertex_count_record = new List<Model_vertex_count_record>();             //用 KBV_Model_name 找到資料庫
+
     public static List<point_info> KBV_WorldVertices = new List<point_info>();       //存放所有可以被看到的點，之後要先去做 KD Tree 判斷
     public static List<point_info> KDT_WorldVertices = new List<point_info>();       //存放 KD Tree 覺得接近的點
 
     Camera cam;
+    Plane[] planes;
+
+    static Raycast instance;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     void Start()
     {
-        reCalculateKBV();
-
+        lastTime = Time.time;
         cam = GetComponent<Camera>();
+
+        planes = GeometryUtility.CalculateFrustumPlanes(cam);
+
+        //為了減少效能，找可見模型只做一次(之後再看看怎麼做比較好)
+        reCalculateKBV_Model();
     }
 
     void Update()
     {
-        if (true)
+        _dTime += Time.deltaTime;
+        //if (Input.GetMouseButton(0))  //使用滑鼠左鍵開始paint
+        //if (_dTime >= deltaTime)      //間隔deltaTime時間就paint
+        if (true)                       //每個update都paint
         {
-            //reCalculateKBV();
-            reCalculateCameraDepth();
-            KDT_WorldVertices.Clear();
+            _dTime = 0;
+            print("paint!!");
+
+            reCalculateKBV_Vertice();
+            //reCalculateCameraDepth();
+
             Paint();
         }
     }
 
-    void reCalculateCameraDepth()
+    //目前沒用到
+    /*void reCalculateCameraDepth()
     {
         cam.depthTextureMode = DepthTextureMode.Depth;
         //Debug.Log("stop!!");
-    }
+    }*/
 
-    void reCalculateKBV()
+    public GameObject GoToDraw;
+    void reCalculateKBV_Model()
     {
-        //第一層---模型過濾(該模型有沒有在視錐體範圍內)
-        //...
+        KBV_Model_name.Clear();
+        KBV_Model_Record.Clear();
+        KBV_Model_vertex_count_record.Clear();
 
-        //第二層---vertex是否在screen上可被見
-        //...
-
-        //隨便無作上述動作層(?
-        //model全包
-        //vertices全包
-
-        //先只看單一一個模型
-        KBV_Model_name.Add("stanford-bunny (1)");
-        temp_Data.Add((ModelRecord)Resources.Load("ModelRecord/" + KBV_Model_name[0], typeof(ModelRecord)));
-        for (int i = 0; i < temp_Data[0].m_Data.number_of_vertices; i++)
+        //第一層---讀取GoToDraw物件下的所有子物件資料
+        foreach (Transform subObj in GoToDraw.transform)
         {
-            point_info temp = new point_info(i, temp_Data[0].m_Data.vertices_world[i], temp_Data[0].m_Data.Model_Name,0);
-            KBV_WorldVertices.Add(temp);
-        }
+            if (!subObj.gameObject.activeSelf)
+                continue;
+            if (!subObj.GetComponent<Model_vertex_count_record>())
+                continue;
 
+            //第二層---模型過濾(該模型有沒有在視錐體範圍testPlaneAABB內)
+            if (!GeometryUtility.TestPlanesAABB(planes, subObj.GetComponent<Collider>().bounds))
+                return;
+            KBV_Model_name.Add(subObj.name);
+            KBV_Model_Record.Add((ModelRecord)Resources.Load("ModelRecord/" + subObj.name, typeof(ModelRecord)));
+            KBV_Model_vertex_count_record.Add(subObj.GetComponent<Model_vertex_count_record>());
+        }
     }
 
+    void reCalculateKBV_Vertice()
+    {
+        KBV_WorldVertices.Clear();
+
+        for (int j = 0; j < KBV_Model_Record.Count; j++)
+            for (int i = 0; i < KBV_Model_Record[j].m_Data.number_of_vertices; i++)
+            {
+                //第三層---判斷vertex normal 是否朝向 camera
+                Vector3 nowVerticeWorldPos = KBV_Model_Record[j].m_Data.vertices_world[i];
+                Vector3 pointCameraDirection = transform.position - nowVerticeWorldPos;
+                if (Vector3.Dot(KBV_Model_Record[j].m_Data.vertices_normal[i], pointCameraDirection) > 0)
+                    continue;
+
+                //第四層---vertex是否在screen上可被見(從該點發射射線往cemera
+                /*RaycastHit temp_hit;
+                if (Physics.Raycast(nowVerticeWorldPos, pointCameraDirection, out temp_hit))
+                    if (!(temp_hit.transform.tag == "cameraBackWall"))
+                        continue;*/
+                point_info temp = new point_info(i, nowVerticeWorldPos, KBV_Model_Record[j].m_Data.Model_Name, 0);
+                KBV_WorldVertices.Add(temp);
+            }
+    }
+    
     void Paint()
     {
         RaycastHit hit;
@@ -95,53 +160,66 @@ public class Raycast : MonoBehaviour
 
     void KDT_find_vertices(RaycastHit _hit)
     {
-        //if(滿足KDT)
+        KDT_WorldVertices.Clear();
 
-        //目前只做，把p所在的該三角形的頂點輸出
-        #region 之後應該用不到的部分
-        MeshCollider meshCollider = _hit.collider as MeshCollider;
-        if (meshCollider == null || meshCollider.sharedMesh == null)
-            return;
-        Mesh mesh = meshCollider.sharedMesh;
-        Vector3[] vertices = mesh.vertices;
-        int[] triangles = mesh.triangles;
-        int p0_index = triangles[_hit.triangleIndex * 3 + 0];
-        int p1_index = triangles[_hit.triangleIndex * 3 + 1];
-        int p2_index = triangles[_hit.triangleIndex * 3 + 2];
+        Vector3[] temp_vertices_forKBVuse = new Vector3[KBV_WorldVertices.Count];
 
-        Vector3 p0 = vertices[p0_index];
-        Vector3 p1 = vertices[p1_index];
-        Vector3 p2 = vertices[p2_index];
-        Transform hitTransform = _hit.collider.transform;
-        p0 = hitTransform.TransformPoint(p0);
-        p1 = hitTransform.TransformPoint(p1);
-        p2 = hitTransform.TransformPoint(p2);
-        Debug.DrawLine(p0, p1, Color.red, 10f, true);
-        Debug.DrawLine(p1, p2, Color.red, 10f, true);
-        Debug.DrawLine(p2, p0, Color.red, 10f, true);
-        #endregion
-        Vector3 p_hit= hitTransform.TransformPoint(_hit.point);
+        for (int i = 0; i < KBV_WorldVertices.Count; i++)
+        {
+            temp_vertices_forKBVuse[i] = KBV_WorldVertices[i].point;
+        }
+        KDQuery query = new KDQuery();
+        KDTree tree = new KDTree(temp_vertices_forKBVuse, 32);
+        List<int> _resultPoint = new List<int>();
+        query.Radius(tree, _hit.point, influence_Radius, _resultPoint);
 
-        float All_area = Vector3.Cross(p1-p0, p2-p0).magnitude / 2;
-        float _area0= Vector3.Cross(p1 - p_hit, p2 - p_hit).magnitude / 2;
-        float _area1= Vector3.Cross(p0 - p_hit, p2 - p_hit).magnitude / 2;
-        float _area2= Vector3.Cross(p0 - p_hit, p1 - p_hit).magnitude / 2;
-        point_info temp0 = new point_info( p0_index, p0, meshCollider.gameObject.name, All_area / (_area0 * 3));
-        point_info temp1 = new point_info( p1_index, p1, meshCollider.gameObject.name, All_area / (_area1 * 3));
-        point_info temp2 = new point_info( p2_index, p2, meshCollider.gameObject.name, All_area / (_area2 * 3));
+        //KDT 的結果放在 _resultPoint
+        for (int i = 0; i < _resultPoint.Count; i++)
+        {
+            point_info tempP = KBV_WorldVertices[_resultPoint[i]];
 
-        KDT_WorldVertices.Add(temp0);
-        KDT_WorldVertices.Add(temp1);
-        KDT_WorldVertices.Add(temp2);
-    }
+            float x = Vector3.Distance(tempP.point, _hit.point);
+            //高斯函數(x軸-->距離，y軸-->weight)
+            float Gaussian_func = Gaus_a * (float)Math.Exp(0 - Math.Pow(x - Gaus_b, 2) / (2 * Gaus_c * Gaus_c));
+            tempP.weight = Gaussian_func;
 
-    void UpdateModelRecordCount()
-    {
-        for (int i = 0; i < KDT_WorldVertices.Count; i++) {
-            temp_Data[0].m_Data.count[KDT_WorldVertices[i].vertex_index]+= KDT_WorldVertices[i].weight;
+            KDT_WorldVertices.Add(tempP);
         }
 
     }
 
+    void UpdateModelRecordCount()
+    {
+        //更新新增的count
+        for (int i = 0; i < KDT_WorldVertices.Count; i++)
+        {
+            int temp_id = KBV_Model_name.FindIndex(x => x == KDT_WorldVertices[i].model_name);
+            KBV_Model_Record[temp_id].m_Data.count[KDT_WorldVertices[i].vertex_index] += KDT_WorldVertices[i].weight;
+            KBV_Model_Record[temp_id].m_Data.hey_need_update = true;
 
+            //處理(紀錄)時間軸
+            time_info temp_time_info = new time_info();
+            float nowTime = Time.time;
+            temp_time_info.delta_time = nowTime - lastTime;
+            lastTime = nowTime;
+            temp_time_info.all_vertice_count = KBV_Model_vertex_count_record[temp_id].GetAllVerticeCount();
+            KBV_Model_vertex_count_record[temp_id].AddHistory(temp_time_info);
+
+        }
+
+        //叫每個模型的shader去上新的顏色
+        for (int i = 0; i < KBV_Model_vertex_count_record.Count; i++)
+        {
+            KBV_Model_vertex_count_record[i].CheckChange();
+        }
+
+    }
+
+}
+
+[System.Serializable]
+public class time_info
+{
+    public float delta_time;    //紀錄與上一個紀錄相差(經過)多少時間
+    public float[] all_vertice_count;
 }
