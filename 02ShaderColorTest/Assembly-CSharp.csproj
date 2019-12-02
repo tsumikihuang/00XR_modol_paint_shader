@@ -82,6 +82,7 @@
     <Compile Include="Assets\History.cs" />
     <Compile Include="Assets\Model_vertex_count_record.cs" />
     <Compile Include="Assets\ModelRecord.cs" />
+    <Compile Include="Assets\OnValueChangedText.cs" />
     <Compile Include="Assets\OrbitCamera.cs" />
     <Compile Include="Assets\Raycast.cs" />
     <Compile Include="Assets\StateBoard.cs" />

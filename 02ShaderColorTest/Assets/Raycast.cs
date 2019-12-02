@@ -35,7 +35,7 @@ public class Raycast : MonoBehaviour
     //最高y值
     public float Gaus_a = 1.0f;
     //中心位移
-    private float Gaus_b = 0.0f;
+    private const float Gaus_b = 0.0f;
     [Range(0f, 5f)]
     public float Gaus_c = 3.0f;
     #endregion
@@ -51,14 +51,14 @@ public class Raycast : MonoBehaviour
     Camera cam;
     Plane[] planes;
 
-    static Raycast instance;
+    /*public static Raycast instance;
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
-    }
+    }*/
 
     void Start()
     {
@@ -196,21 +196,20 @@ public class Raycast : MonoBehaviour
             int temp_id = KBV_Model_name.FindIndex(x => x == KDT_WorldVertices[i].model_name);
             KBV_Model_Record[temp_id].m_Data.count[KDT_WorldVertices[i].vertex_index] += KDT_WorldVertices[i].weight;
             KBV_Model_Record[temp_id].m_Data.hey_need_update = true;
-
-            //處理(紀錄)時間軸
-            time_info temp_time_info = new time_info();
-            float nowTime = Time.time;
-            temp_time_info.delta_time = nowTime - lastTime;
-            lastTime = nowTime;
-            temp_time_info.all_vertice_count = KBV_Model_vertex_count_record[temp_id].GetAllVerticeCount();
-            KBV_Model_vertex_count_record[temp_id].AddHistory(temp_time_info);
-
         }
 
         //叫每個模型的shader去上新的顏色
         for (int i = 0; i < KBV_Model_vertex_count_record.Count; i++)
         {
             KBV_Model_vertex_count_record[i].CheckChange();
+
+            //處理(紀錄)時間軸
+            time_info temp_time_info = new time_info();
+            float nowTime = Time.time;
+            temp_time_info.delta_time = nowTime - lastTime;
+            lastTime = nowTime;
+            temp_time_info.all_vertice_count = KBV_Model_vertex_count_record[i].GetAllVerticeCount();
+            KBV_Model_vertex_count_record[i].AddHistory(temp_time_info);
         }
 
     }

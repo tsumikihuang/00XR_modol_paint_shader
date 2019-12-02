@@ -8,27 +8,27 @@
 
 	}
 
-		SubShader
+	SubShader
+	{
+		Tags {"RenderType" = "Overlay" "Queue" = "Transparent" }
+		Blend SrcAlpha OneMinusSrcAlpha
+
+		ZTest[unity_GUIZTestMode]
+		ZWrite On
+
+		//Cull off		//開啟即有雙面
+
+		Pass
 		{
-			Tags {"RenderType" = "Overlay" "Queue" = "Transparent" }
-			Blend SrcAlpha OneMinusSrcAlpha
+			Tags{ "LightMode" = "ForwardBase" }
 
-			ZTest[unity_GUIZTestMode]
-			ZWrite On
-
-			//Cull off		//開啟即有雙面
-
-			Pass
-			{
-				Tags{ "LightMode" = "ForwardBase" }
-
-				CGPROGRAM
-				#include "Lighting.cginc"
-				#include "UnityCG.cginc"
-				#pragma vertex vert
-				#pragma require geometry
-				#pragma geometry geom
-				#pragma fragment frag
+			CGPROGRAM
+			#include "Lighting.cginc"
+			#include "UnityCG.cginc"
+			#pragma vertex vert
+			#pragma require geometry
+			#pragma geometry geom
+			#pragma fragment frag
 
 			//#pragma target 4.0
 			#pragma enable_d3d11_debug_symbols		//debug用!!!
@@ -122,7 +122,6 @@
 			half4 frag(VertexDataPass_g2f IN) :SV_Target
 			{
 				half heat = 0;
-
 				uint width = vertice_count * _EVRN;
 				uint height = 1;
 				if (width > 10000) {
@@ -140,6 +139,13 @@
 				float ratio;
 				//拿出 這個frag所在三角點(3個id)裡各自的_EVRN筆資料
 				uint i;
+
+				float4 allVert[30];	//保守給30
+				for (i = 0; i < 30; i++)
+					allVert[i] = float4(0,0,0,0);
+				int allVert_len = 0;
+				bool isRepeat;
+				
 				for (i = 0; i < _EVRN; i++)
 				{
 					index = IN.v0_id * _EVRN + i;
@@ -167,13 +173,22 @@
 					if (floor(value.a * 10 + 0.5) == 10)
 						temp_point.z = temp_point.z * (-1);
 
-
 					dis = distance(IN.worldPos, temp_point);
-					if (dis < _Radius && dis>0)
+
+					if (dis < _Radius)
 					{
-						//ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						ratio = 1/ dis;								// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						heat += count * ratio ;				// 熱度 = 亮度??(改成次數占比) * 距離比例
+						float4 thisP = float4(temp_point.x, temp_point.y, temp_point.z, count);
+						isRepeat = false;
+						for (uint j = 0; j < allVert_len; j++) {
+							if ((allVert[j].x == thisP.x && allVert[j].y == thisP.y) && (allVert[j].z == thisP.z && allVert[j].w == thisP.w)) {
+								isRepeat = true;
+								break;
+							}
+						}
+						if (!isRepeat) {
+							allVert[allVert_len] = thisP;
+							allVert_len++;
+						}
 					}
 				}
 				for (i = 0; i < _EVRN; i++)
@@ -203,13 +218,22 @@
 					if (floor(value.a * 10 + 0.5) == 10)
 						temp_point.z = temp_point.z * (-1);
 
-
 					dis = distance(IN.worldPos, temp_point);
+
 					if (dis < _Radius)
 					{
-						//ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						ratio = 1 / dis;								// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						heat += count * ratio ;				// 熱度 = 亮度??(改成次數占比) * 距離比例
+						float4 thisP = float4(temp_point.x, temp_point.y, temp_point.z, count);
+						isRepeat = false;
+						for (uint j = 0; j < allVert_len; j++) {
+							if ((allVert[j].x == thisP.x && allVert[j].y == thisP.y) && (allVert[j].z == thisP.z && allVert[j].w == thisP.w)) {
+								isRepeat = true;
+								break;
+							}
+						}
+						if (!isRepeat) {
+							allVert[allVert_len] = thisP;
+							allVert_len++;
+						}
 					}
 				}
 				for (i = 0; i < _EVRN; i++)
@@ -239,16 +263,32 @@
 					if (floor(value.a * 10 + 0.5) == 10)
 						temp_point.z = temp_point.z * (-1);
 
-
 					dis = distance(IN.worldPos, temp_point);
+
 					if (dis < _Radius)
 					{
-						//ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						ratio = 1 / dis;								// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-						heat += count * ratio;				// 熱度 = 亮度??(改成次數占比) * 距離比例
+						float4 thisP = float4(temp_point.x, temp_point.y, temp_point.z, count);
+						isRepeat = false;
+						for (uint j = 0; j < allVert_len; j++) {
+							if ((allVert[j].x == thisP.x && allVert[j].y == thisP.y) && (allVert[j].z == thisP.z && allVert[j].w == thisP.w)) {
+								isRepeat = true;
+								break;
+							}
+						}
+						if (!isRepeat) {
+							allVert[allVert_len] = thisP;
+							allVert_len++;
+						}
 					}
 				}
-
+				for (i = 0; i < allVert_len; i++) {
+					dis = distance(IN.worldPos, float3(allVert[i].x, allVert[i].y, allVert[i].z));
+					count = allVert[i].w;
+					//ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
+					ratio = 1 / dis;
+					heat += count * ratio;				// 熱度 = 亮度??(改成次數占比) * 距離比例
+				}
+				
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 				fixed3 worldNormal = normalize(UnityObjectToWorldNormal(IN.normal));
 				fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
@@ -268,8 +308,8 @@
 				return fixed4(color, 1.0);
 			}
 
-		ENDCG
-	}
+			ENDCG
 		}
-			FallBack "Diffuse"
+	}
+	FallBack "Diffuse"
 }

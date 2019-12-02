@@ -1,5 +1,5 @@
 ﻿//附在每一個物件上
-//當raycast點到某物件時，就會呼叫此物件的NewChange(Vector3 _point)
+//當raycast點到某物件時，就會呼叫此物件的NewChange()
 using DataStructures.ViliWonka.KDTree;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +42,11 @@ public class Model_vertex_count_record : MonoBehaviour
         NewChange();
     }
 
+    private void Update()
+    {
+        NewChange();
+    }
+
     public void CheckChange()
     {
         if (Scriptable_Data.m_Data.hey_need_update)
@@ -57,6 +62,10 @@ public class Model_vertex_count_record : MonoBehaviour
         if (Scriptable_Data == null)
         {
             Scriptable_Data = (ModelRecord)Resources.Load("ModelRecord/" + name, typeof(ModelRecord));
+        }
+        if (Scriptable_Data == null)
+        {
+            Debug.LogError("這個model沒有自己的ModelRecord檔案(必須放在Resources資料夾下，且檔案名稱與物件名稱相同)");
         }
 
         //裡面已經有資料
@@ -137,10 +146,8 @@ public class Model_vertex_count_record : MonoBehaviour
 
     void FormatVertexInfo()
     {
-        //EVRN = (int)(shaderRadius+0.5f);
-        //EVRN = 10;
         int vNum = Scriptable_Data.m_Data.number_of_vertices;
-        Vector4[] list_temp10X = new z[vNum * EVRN];        //Vector4 >> 百、十、個、小數點後一位
+        Vector4[] list_temp10X = new Vector4[vNum * EVRN];        //Vector4 >> 百、十、個、小數點後一位
         Vector4[] list_temp10Y = new Vector4[vNum * EVRN];
         Vector4[] list_temp10Z = new Vector4[vNum * EVRN];
         Vector4[] list_temp10Count = new Vector4[vNum * EVRN];    //Vector4 >> 個、小數點後 一、二、三 位
