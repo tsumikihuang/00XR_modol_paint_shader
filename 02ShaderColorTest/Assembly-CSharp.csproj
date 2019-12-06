@@ -80,6 +80,7 @@
     <Compile Include="Assets\Datastructures\Tests\KDTreeBenchmark.cs" />
     <Compile Include="Assets\Datastructures\Tests\KDTreeQueryTests.cs" />
     <Compile Include="Assets\History.cs" />
+    <Compile Include="Assets\M2M_KDT_Search.cs" />
     <Compile Include="Assets\Model_vertex_count_record.cs" />
     <Compile Include="Assets\ModelRecord.cs" />
     <Compile Include="Assets\OnValueChangedText.cs" />

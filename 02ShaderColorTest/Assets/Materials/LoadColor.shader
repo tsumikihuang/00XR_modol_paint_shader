@@ -43,10 +43,16 @@
 
 			uniform uint _EVRN;
 			uniform uint vertice_count;
-			uniform sampler2D array_10X;
-			uniform sampler2D array_10Y;
-			uniform sampler2D array_10Z;
-			uniform sampler2D array_10Count;
+			uniform sampler2D array;
+
+			uniform float _MinX;
+			uniform float _RangeX;
+			uniform float _MinY;
+			uniform float _RangeY;
+			uniform float _MinZ;
+			uniform float _RangeZ;
+			uniform float _MinW;
+			uniform float _RangeW;
 
 			struct a2v
 			{
@@ -143,7 +149,7 @@
 				float4 allVert[30];	//保守給30
 				for (i = 0; i < 30; i++)
 					allVert[i] = float4(0,0,0,0);
-				int allVert_len = 0;
+				uint allVert_len = 0;
 				bool isRepeat;
 				
 				for (i = 0; i < _EVRN; i++)
@@ -152,26 +158,15 @@
 					index_x = (index % 10000 + 0.5) / width;
 					index_y = (index / 10000 + 0.5) / height;
 
+					value = tex2D(array, float2(index_x, index_y)).rgba;
+
 					//Count
-					value = tex2D(array_10Count, float2(index_x, index_y)).rgba;
-					count = floor(value.r * 10 + 0.5) + floor(value.g * 10 + 0.5) * 0.1 + floor(value.b * 10 + 0.5) * 0.01 + floor(value.a * 10 + 0.5) * 0.001;
+					count = value.a*_RangeW + _MinW;
 					if (count == 0.00f)continue;
 
-					//X
-					value = tex2D(array_10X, float2(index_x, index_y)).rgba;
-					temp_point.x = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.x = temp_point.x * (-1);
-					//Y
-					value = tex2D(array_10Y, float2(index_x, index_y)).rgba;
-					temp_point.y = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.y = temp_point.y * (-1);
-					//Z
-					value = tex2D(array_10Z, float2(index_x, index_y)).rgba;
-					temp_point.z = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.z = temp_point.z * (-1);
+					temp_point.x = value.r*_RangeX + _MinX;
+					temp_point.y = value.g*_RangeY + _MinY;
+					temp_point.z = value.b*_RangeZ + _MinZ;
 
 					dis = distance(IN.worldPos, temp_point);
 
@@ -197,26 +192,15 @@
 					index_x = (index % 10000 + 0.5) / width;
 					index_y = (index / 10000 + 0.5) / height;
 
+					value = tex2D(array, float2(index_x, index_y)).rgba;
+
 					//Count
-					value = tex2D(array_10Count, float2(index_x, index_y)).rgba;
-					count = floor(value.r * 10 + 0.5) + floor(value.g * 10 + 0.5) * 0.1 + floor(value.b * 10 + 0.5) * 0.01 + floor(value.a * 10 + 0.5) * 0.001;
+					count = value.a*_RangeW + _MinW;
 					if (count == 0.00f)continue;
 
-					//X
-					value = tex2D(array_10X, float2(index_x, index_y)).rgba;
-					temp_point.x = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.x = temp_point.x * (-1);
-					//Y
-					value = tex2D(array_10Y, float2(index_x, index_y)).rgba;
-					temp_point.y = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.y = temp_point.y * (-1);
-					//Z
-					value = tex2D(array_10Z, float2(index_x, index_y)).rgba;
-					temp_point.z = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.z = temp_point.z * (-1);
+					temp_point.x = value.r*_RangeX + _MinX;
+					temp_point.y = value.g*_RangeY + _MinY;
+					temp_point.z = value.b*_RangeZ + _MinZ;
 
 					dis = distance(IN.worldPos, temp_point);
 
@@ -242,26 +226,15 @@
 					index_x = (index % 10000 + 0.5) / width;
 					index_y = (index / 10000 + 0.5) / height;
 
+					value = tex2D(array, float2(index_x, index_y)).rgba;
+
 					//Count
-					value = tex2D(array_10Count, float2(index_x, index_y)).rgba;
-					count = floor(value.r * 10 + 0.5) + floor(value.g * 10 + 0.5) * 0.1 + floor(value.b * 10 + 0.5) * 0.01 + floor(value.a * 10 + 0.5) * 0.001;
+					count = value.a*_RangeW + _MinW;
 					if (count == 0.00f)continue;
 
-					//X
-					value = tex2D(array_10X, float2(index_x, index_y)).rgba;
-					temp_point.x = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.x = temp_point.x * (-1);
-					//Y
-					value = tex2D(array_10Y, float2(index_x, index_y)).rgba;
-					temp_point.y = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.y = temp_point.y * (-1);
-					//Z
-					value = tex2D(array_10Z, float2(index_x, index_y)).rgba;
-					temp_point.z = floor(value.r * 10 + 0.5) * 10 + floor(value.g * 10 + 0.5) + floor(value.b * 10 + 0.5) * 0.1;
-					if (floor(value.a * 10 + 0.5) == 10)
-						temp_point.z = temp_point.z * (-1);
+					temp_point.x = value.r*_RangeX + _MinX;
+					temp_point.y = value.g*_RangeY + _MinY;
+					temp_point.z = value.b*_RangeZ + _MinZ;
 
 					dis = distance(IN.worldPos, temp_point);
 
@@ -270,7 +243,7 @@
 						float4 thisP = float4(temp_point.x, temp_point.y, temp_point.z, count);
 						isRepeat = false;
 						for (uint j = 0; j < allVert_len; j++) {
-							if ((allVert[j].x == thisP.x && allVert[j].y == thisP.y) && (allVert[j].z == thisP.z && allVert[j].w == thisP.w)) {
+							if (allVert[j].x == thisP.x && allVert[j].y == thisP.y && allVert[j].z == thisP.z && allVert[j].w == thisP.w) {
 								isRepeat = true;
 								break;
 							}
@@ -281,12 +254,14 @@
 						}
 					}
 				}
+
 				for (i = 0; i < allVert_len; i++) {
 					dis = distance(IN.worldPos, float3(allVert[i].x, allVert[i].y, allVert[i].z));
 					count = allVert[i].w;
 					//ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
 					ratio = 1 / dis;
-					heat += count * ratio;				// 熱度 = 亮度??(改成次數占比) * 距離比例
+					heat += count * ratio/20;								// 熱度 = 亮度??(改成次數占比) * 距離比例
+					//heat += count /10;								// 熱度 = 亮度??(改成次數占比) * 距離比例
 				}
 				
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;

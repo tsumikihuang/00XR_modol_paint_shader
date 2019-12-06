@@ -22,6 +22,16 @@ public class Data
     //隨Update更新
     public float[] count;
     public Vector4[] normalizeDATA_Pass2Shader_10xyzcount;   //每一個點 紀錄最近10點的座標和count
+
+    ////////////////////////////////////////////////
+    public float MaxElement_x= 100;
+    public float MaxElement_y= 100;
+    public float MaxElement_z= 100;
+    public float MaxElement_count=10;
+    public float MinElement_x=-100;
+    public float MinElement_y=-100;
+    public float MinElement_z=-100;
+    public float MinElement_count=0;
 }
 
 [CreateAssetMenu(fileName ="ModelRecord",menuName ="HeatMap/Create Model Record",order =1)]
