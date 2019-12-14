@@ -23,7 +23,7 @@ public class OrbitCamera : MonoBehaviour
     public float zoomSpeed = 0.5f;
     public float minDistance = 10f;
     public float maxDistance = 1000f;
-    private float m_targetDistance = 0;
+    private float m_TargetDistance = 0;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class OrbitCamera : MonoBehaviour
         y = angles.x;
         fx = x;
         fy = y;
-        m_targetDistance = distance;
+        m_TargetDistance = distance;
         UpdateRotaAndPos();
         fDistance = distance;
     }
@@ -78,9 +78,9 @@ public class OrbitCamera : MonoBehaviour
         if (target)
         {
             float wheelValue = Input.GetAxis("Mouse ScrollWheel");
-            m_targetDistance -= wheelValue * zoomSpeed * 400 * Time.deltaTime;
-            m_targetDistance = ClampAngle(m_targetDistance, minDistance, maxDistance);
-            distance = ClampAngle(Mathf.Lerp(distance, m_targetDistance, 0.2f), minDistance, maxDistance);
+            m_TargetDistance -= wheelValue * zoomSpeed * 400 * Time.deltaTime;
+            m_TargetDistance = ClampAngle(m_TargetDistance, minDistance, maxDistance);
+            distance = ClampAngle(Mathf.Lerp(distance, m_TargetDistance, 0.2f), minDistance, maxDistance);
         }
     }
 

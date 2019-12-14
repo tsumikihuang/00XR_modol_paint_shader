@@ -20,11 +20,11 @@ public class History : MonoBehaviour
         }
     }
 
-    Model_vertex_count_record result_noteBook;
+    SimpleModel result_noteBook;
     List<time_info> model_history;
     private void Start()
     {
-        result_noteBook = model.transform.Find("gargoyle_simple").gameObject.GetComponent<Model_vertex_count_record>();
+        result_noteBook = model.transform.Find("gargoyle_simple").gameObject.GetComponent<SimpleModel>();
         model_history = result_noteBook.GetHistory();
 
     }
@@ -47,7 +47,7 @@ public class History : MonoBehaviour
         }
         Debug.Log(id);
         result_noteBook.SetAllVerticeCount(model_history[id].all_vertice_count);
-        result_noteBook.NewChange();
+        //result_noteBook.NewChange();
 
         /*if ((float)Convert.ToDouble(OnValueChangedText.ValueText.text)!= select_Time && select_Time<=END_Time)
         {
