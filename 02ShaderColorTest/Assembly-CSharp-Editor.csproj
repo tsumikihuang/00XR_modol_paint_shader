@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\HeatMapSettingWindow.cs" />
     <Compile Include="Assets\Editor\OrignModelEditor.cs" />
+    <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>D:/GitHub/modol_paint_shader/02ShaderColorTest/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

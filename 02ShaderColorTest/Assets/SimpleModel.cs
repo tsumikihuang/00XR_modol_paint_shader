@@ -1,10 +1,6 @@
 ﻿//附在每一個物件上
 //當raycast點到某物件時，就會呼叫此物件的NewChange()
-using DataStructures.ViliWonka.KDTree;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 //簡化後模型
@@ -48,8 +44,7 @@ public class SimpleModel : MonoBehaviour
     {
         if (S_NoteBook == null)
         {
-            string filePath = @"Assets/SimpleModelRecord/"+name+".asset";
-            S_NoteBook = (SimpleModelRecord)AssetDatabase.LoadAssetAtPath(filePath, typeof(SimpleModelRecord));
+            S_NoteBook = Resources.Load<SimpleModelRecord>("SimpleModelRecord/" + name );
             if (S_NoteBook == null)
             {
                 Debug.LogError("這個model沒有自己的SimpleModelRecord檔案(必須放在SimpleModelRecord資料夾下，且檔案名稱與物件名稱相同)");

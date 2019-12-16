@@ -1,10 +1,16 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - ModelRecord
+    - Example
+    - M2M_KDT_Search
     - OrbitCamera
+    - OrignModel
+    - OrignModelRecord
     - Raycast
-    - SimplificationModel_vertex_count_record
+    - Reporter
+    - ReporterMessageReceiver
+    - SimpleModel
+    - SimpleModelRecord
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -18,7 +24,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/First.unity:
+    Assets/Scenes/01Online.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -52,29 +58,43 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9672}
+      Script: {instanceID: 588}
     - Class: 114
-      Script: {instanceID: 9828}
+      Script: {instanceID: 9678}
     - Class: 114
-      Script: {instanceID: 9868}
+      Script: {instanceID: 9728}
     - Class: 114
-      Script: {instanceID: 9938}
+      Script: {instanceID: 9838}
     - Class: 114
-      Script: {instanceID: 10086}
+      Script: {instanceID: 9878}
     - Class: 114
-      Script: {instanceID: 10246}
+      Script: {instanceID: 9948}
     - Class: 114
-      Script: {instanceID: 10448}
+      Script: {instanceID: 10022}
     - Class: 114
-      Script: {instanceID: 10592}
+      Script: {instanceID: 10102}
     - Class: 114
-      Script: {instanceID: 11040}
+      Script: {instanceID: 10176}
     - Class: 114
-      Script: {instanceID: 11290}
+      Script: {instanceID: 10266}
     - Class: 114
-      Script: {instanceID: 11386}
+      Script: {instanceID: 10468}
+    - Class: 114
+      Script: {instanceID: 10612}
+    - Class: 114
+      Script: {instanceID: 10928}
+    - Class: 114
+      Script: {instanceID: 10930}
+    - Class: 114
+      Script: {instanceID: 10932}
+    - Class: 114
+      Script: {instanceID: 11064}
+    - Class: 114
+      Script: {instanceID: 11320}
     - Class: 114
       Script: {instanceID: 11418}
+    - Class: 114
+      Script: {instanceID: 11450}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -94,6 +114,12 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
+      Hash: 5d694fb001503417d2bb4a27eeab8ac5
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TestReporter
+  - hash:
+      serializedVersion: 2
       Hash: 4bc4346a71a8df53a6b106f68ef3a190
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -106,6 +132,12 @@ ScriptsOnlyBuild:
     className: TMP_SelectionCaret
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ReporterGUI
+  - hash:
+      serializedVersion: 2
       Hash: 87ff43d2baf3385cba327d8f803a4ebb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -116,6 +148,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_Dropdown
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ReporterMessageReceiver
   - hash:
       serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
@@ -166,12 +204,6 @@ ScriptsOnlyBuild:
     className: Image
   - hash:
       serializedVersion: 2
-      Hash: 25c391c825ebcd0d3d9622edd606cb84
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: test
-  - hash:
-      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
@@ -190,10 +222,16 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 4fbbae922c932aeb8db238adc9bad37c
+      Hash: c776da134023c3ea5ba1ce8e2ba6e109
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Raycast
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: M2MRecord
   - hash:
       serializedVersion: 2
       Hash: 8aa3d6ccbcb54ee8db6c1229854adaaa
@@ -220,6 +258,12 @@ ScriptsOnlyBuild:
     className: PhysicsRaycaster
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: M2M_KDT_Search
+  - hash:
+      serializedVersion: 2
       Hash: bd3cf68c8964d3c66d1c43f4f98508c9
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -244,16 +288,22 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: 7cea2fd77df68225438d5ee2793f5da7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: SimplificationModel_vertex_count_record
+    className: SimpleModel
   - hash:
       serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AnimationPlayableAsset
+  - hash:
+      serializedVersion: 2
+      Hash: e78cd16ebf9601c38819cd2a88afbf1d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Reporter
   - hash:
       serializedVersion: 2
       Hash: aba7b2852ef61d175dd9602e7723d5e5
@@ -266,6 +316,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Shadow
+  - hash:
+      serializedVersion: 2
+      Hash: dd5c2e9cb29cfdc77e4919a3b19b4644
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: History
   - hash:
       serializedVersion: 2
       Hash: 3e7f88250637e2c70d8f110dec757dc4
@@ -364,12 +420,6 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PassColor
-  - hash:
-      serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -430,6 +480,24 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
+      Hash: 9b2cb2ca405d0ef787f1c2bc61d28589
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OrignModel
+  - hash:
+      serializedVersion: 2
+      Hash: 7d873e0c17f2aa859cc92ed01b401ca9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OrignModelRecord
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Example
+  - hash:
+      serializedVersion: 2
       Hash: ee0cef6caaac8ae485bfa82f000f0f7b
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -472,16 +540,22 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Rotate
+  - hash:
+      serializedVersion: 2
       Hash: 5372ed2ce39229b1ac910757999a8be2
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshPro
   - hash:
       serializedVersion: 2
-      Hash: 148100ec2f5d7a1c673f083bde164da1
+      Hash: ebb91a85bd1c127033eb0869a736467b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: ModelRecord
+    className: SimpleModelRecord
   - hash:
       serializedVersion: 2
       Hash: 3165968ba45c74472d279ba04455fccb
@@ -500,6 +574,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
     className: BaseInput
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OnValueChangedText
   - hash:
       serializedVersion: 2
       Hash: caa533b001ae39b864ba8425019e2268
@@ -568,5 +648,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 5
   scenePathNames:
-  - Assets/Scenes/First.unity
-  playerPath: "D:/GitHub/modol_paint_shader/DEMO/3_2\u7684\u5EF6\u4F38_KDT\u5167\u4E09\u89D2\u9EDE\u8CE6\u503C/ShaderColorTest.exe"
+  - Assets/Scenes/01Online.unity
+  playerPath: C:/Users/user/Desktop/1214/HeatMap.exe

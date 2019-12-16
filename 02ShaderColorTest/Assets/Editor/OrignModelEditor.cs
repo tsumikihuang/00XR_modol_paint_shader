@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 //顯示模型的客製化調整參數
@@ -15,6 +13,9 @@ public class SimpleModelEditor : Editor
         //DrawDefaultInspector();
         O_Model = (OrignModel)target;
 
+        //空行
+        EditorGUILayout.Space();
+
         #region 選擇貼圖
         // Toggle(標題, 預設值)，勾選框元件
         _isOrignTexture = EditorGUILayout.Toggle("是否要顯示原本的貼圖", _isOrignTexture);      //預設是HeatMap材質
@@ -28,36 +29,38 @@ public class SimpleModelEditor : Editor
         }
         #endregion
 
+        EditorGUILayout.Space();
 
 
         #region 如果還沒創建M2M資料...
-        O_Model.S_Model = (SimpleModel)EditorGUILayout.ObjectField(O_Model.S_Model, typeof(SimpleModel), true);
+            EditorGUILayout.LabelField("放入參考的紀錄點(簡化後)模型，需有SimpleModel.cs");
+            O_Model.S_Model = (SimpleModel)EditorGUILayout.ObjectField(O_Model.S_Model, typeof(SimpleModel), true);
 
-        // 從 BeginDisabledGroup(Boolean) 到 EndDisabledGroup() 中間的範圍是否可以被選取
-        // 取決於 BeginDisabledGroup 傳入的布林參數
-        EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader() != null);  //如果還沒創建就可以改S模型及參考熱點半徑
+            EditorGUILayout.Space();
 
+            // 從 BeginDisabledGroup(Boolean) 到 EndDisabledGroup() 中間的範圍是否可以被選取
+            // 取決於 BeginDisabledGroup 傳入的布林參數
+            EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader() != null);  //如果還沒創建就可以改S模型及參考熱點半徑
 
-        // FloatField(標題, 預設值)，浮點數輸入元件
-        // 原本的目標物件(Camera)裡的變數都要設定為 Inspector 欄位中修改的數值
-        O_Model.O2S_Radius = EditorGUILayout.FloatField("參考熱點半徑範圍(可小數)", O_Model.O2S_Radius);
+            // FloatField(標題, 預設值)，浮點數輸入元件
+            // 原本的目標物件(Camera)裡的變數都要設定為 Inspector 欄位中修改的數值
+            O_Model.O2S_Radius = EditorGUILayout.FloatField("參考熱點半徑範圍(可小數)", O_Model.O2S_Radius);
 
-        EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
+            EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
 
-        if (GUILayout.Button("創建 OrignModel to SimpleModel 對應資料"))
-            M2M_KDT_Search.instance.Generate_M2M(O_Model, O_Model.S_Model, O_Model.O2S_Radius);
-        EditorGUI.EndDisabledGroup();
+            if (GUILayout.Button("創建 OrignModel to SimpleModel 對應資料"))
+                M2M_KDT_Search.instance.Generate_M2M(O_Model, O_Model.S_Model, O_Model.O2S_Radius);
+            EditorGUI.EndDisabledGroup();
         #endregion
 
         # region 創建好M2M資料的話...
-        EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader()==null);
-        if (GUILayout.Button("刪除目前 OrignModel to SimpleModel 對應資料"))
-            O_Model.Delete_M2M();
+            EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader()==null);
+            if (GUILayout.Button("刪除目前 OrignModel to SimpleModel 對應資料"))
+                O_Model.Delete_M2M();
 
-        // Slider(標題, 預設值, 最小值, 最大值)，滑桿元件
-        O_Model.ShaderRadius = EditorGUILayout.Slider("Shader上色半徑", O_Model.ShaderRadius, 0, O_Model.O2S_Radius); //不可超過M2M時計算的半徑範圍
-        EditorGUI.EndDisabledGroup();
-
+            // Slider(標題, 預設值, 最小值, 最大值)，滑桿元件
+            O_Model.ShaderRadius = EditorGUILayout.Slider("Shader上色半徑", O_Model.O2S_Radius/2, 0, O_Model.O2S_Radius); //不可超過M2M時計算的半徑範圍
+            EditorGUI.EndDisabledGroup();
         #endregion
 
         /***********************************************************************************************************************************/

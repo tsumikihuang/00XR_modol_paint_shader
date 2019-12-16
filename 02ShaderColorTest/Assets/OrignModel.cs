@@ -1,10 +1,4 @@
-﻿using DataStructures.ViliWonka.KDTree;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 //原始模型
 //負責上色，把上色資料傳給Shader
@@ -17,7 +11,7 @@ public class OrignModel : MonoBehaviour
 
     private OrignModelRecord O_NoteBook;      //儲存模型資料的 ScriptableObject
     private Material O_Material;
-    public float O2S_Radius = 5.0f;
+    public float O2S_Radius;
     public float ShaderRadius;
 
     private void Awake()
@@ -32,17 +26,18 @@ public class OrignModel : MonoBehaviour
 
     private void Update()
     {
-        CheckChange();
+        //CheckChange();
     }
 
     public void CheckChange()
     {
         if (S_NoteBook_Data.hey_need_update)
         {
-            print("Orign model paint!!");
+            //print("Orign model paint!!");
 
             S_NoteBook_Data.hey_need_update = false;
-            NewChange();
+            if (O_NoteBook.m_Data.M2M_PassToShader != null)
+                NewChange();
         }
     }
 
@@ -115,8 +110,7 @@ public class OrignModel : MonoBehaviour
     {
         if (O_NoteBook == null)
         {
-            string filePath = @"Assets/OrignModelRecord/" + name + ".asset";
-            O_NoteBook = (OrignModelRecord)AssetDatabase.LoadAssetAtPath(filePath, typeof(OrignModelRecord));
+            O_NoteBook = Resources.Load<OrignModelRecord>("OrignModelRecord/" + name );
             if (O_NoteBook == null)
             {
                 Debug.LogError("這個model沒有自己的OrignModelRecord檔案(必須放在OrignModelRecord資料夾下，且檔案名稱與物件名稱相同)");

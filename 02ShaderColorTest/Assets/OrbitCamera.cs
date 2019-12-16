@@ -4,7 +4,7 @@ using System.Collections;
 public class OrbitCamera : MonoBehaviour
 {
     public Transform target;
-    private float distance = 100.0f;
+    private float distance = 8.0f;
 
     [Header("Drag Parameter")]
     public float xSpeed = 70.0f;
@@ -21,9 +21,9 @@ public class OrbitCamera : MonoBehaviour
 
     [Header("ScrollWheel Parameter")]
     public float zoomSpeed = 0.5f;
-    public float minDistance = 10f;
-    public float maxDistance = 1000f;
-    private float m_TargetDistance = 0;
+    public float minDistance = 0.5f;
+    public float maxDistance = 50.0f;
+    private float m_targetDistance = 0;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class OrbitCamera : MonoBehaviour
         y = angles.x;
         fx = x;
         fy = y;
-        m_TargetDistance = distance;
+        m_targetDistance = distance;
         UpdateRotaAndPos();
         fDistance = distance;
     }
@@ -78,9 +78,9 @@ public class OrbitCamera : MonoBehaviour
         if (target)
         {
             float wheelValue = Input.GetAxis("Mouse ScrollWheel");
-            m_TargetDistance -= wheelValue * zoomSpeed * 400 * Time.deltaTime;
-            m_TargetDistance = ClampAngle(m_TargetDistance, minDistance, maxDistance);
-            distance = ClampAngle(Mathf.Lerp(distance, m_TargetDistance, 0.2f), minDistance, maxDistance);
+            m_targetDistance -= wheelValue * zoomSpeed * 400 * Time.deltaTime;
+            m_targetDistance = ClampAngle(m_targetDistance, minDistance, maxDistance);
+            distance = ClampAngle(Mathf.Lerp(distance, m_targetDistance, 0.2f), minDistance, maxDistance);
         }
     }
 
@@ -89,7 +89,7 @@ public class OrbitCamera : MonoBehaviour
         if (target)
         {
             Quaternion rotation = Quaternion.Euler(fy, fx, 0);
-            Vector3 negDistance = new Vector3(-25.0f, 50.0f, -distance);
+            Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
 
             /* Quaternion * Vector3    >>  下個位置變化方向，Vector3进行一次Quaternion 旋转
              * 
