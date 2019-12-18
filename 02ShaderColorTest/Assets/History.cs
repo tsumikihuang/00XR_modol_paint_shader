@@ -32,7 +32,7 @@ public class History : MonoBehaviour
 
     public void UseHistory(float Time)
     {
-        result_noteBook.SetAllVerticeCount(model_history[0].all_vertice_count);
+        result_noteBook.SetAllVerticeCount(model_history[0].all_O_vertice_count);
         
         float END_Time = 0;
         int id = model_history.Count-1;
@@ -46,7 +46,7 @@ public class History : MonoBehaviour
             }
         }
         Debug.Log(id);
-        result_noteBook.SetAllVerticeCount(model_history[id].all_vertice_count);
+        result_noteBook.SetAllVerticeCount(model_history[id].all_O_vertice_count);
         //result_noteBook.NewChange();
 
         /*if ((float)Convert.ToDouble(OnValueChangedText.ValueText.text)!= select_Time && select_Time<=END_Time)

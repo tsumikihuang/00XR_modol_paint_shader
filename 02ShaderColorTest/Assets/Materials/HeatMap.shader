@@ -39,7 +39,7 @@
 		uniform sampler2D M2M_array;
 		uniform uint SYSTEM_MAX_TEXTURE_SIZE;
 		uniform uint S_len;
-		uniform uint vertice_count;
+		uniform uint O_vertice_count;
 		uniform uint _EVRN;
 
 		uniform float _Radius;
@@ -73,9 +73,10 @@
 			float4 pos		: SV_POSITION;
 			float3 normal	: NORMAL;
 			float3 worldPos : TEXCOORD5;
-			nointerpolation  uint v0_id : TEXCOORD2;
-			nointerpolation  uint v1_id : TEXCOORD3;
-			nointerpolation  uint v2_id : TEXCOORD4;
+			nointerpolation float3 id : TEXCOORD2;
+			/*nointerpolation uint v0_id : TEXCOORD2;
+			nointerpolation uint v1_id : TEXCOORD3;
+			nointerpolation uint v2_id : TEXCOORD4;*/
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		VertexDataPass_v2g vert(a2v v)
@@ -101,25 +102,28 @@
 			OUT.pos = UnityObjectToClipPos(IN[0].pos);
 			OUT.normal = vn;
 			OUT.worldPos = IN[0].worldPos;
-			OUT.v0_id = IN[0].id;
+			OUT.id = float3(IN[0].id, IN[1].id, IN[2].id);
+			/*OUT.v0_id = IN[0].id;
 			OUT.v1_id = IN[1].id;
-			OUT.v2_id = IN[2].id;
+			OUT.v2_id = IN[2].id;*/
 			tristream.Append(OUT);
 
 			OUT.pos = UnityObjectToClipPos(IN[1].pos);
 			OUT.normal = vn;
 			OUT.worldPos = IN[1].worldPos;
-			OUT.v0_id = IN[0].id;
+			OUT.id = float3(IN[0].id, IN[1].id, IN[2].id);
+			/*OUT.v0_id = IN[0].id;
 			OUT.v1_id = IN[1].id;
-			OUT.v2_id = IN[2].id;
+			OUT.v2_id = IN[2].id;*/
 			tristream.Append(OUT);
 
 			OUT.pos = UnityObjectToClipPos(IN[2].pos);
 			OUT.normal = vn;
 			OUT.worldPos = IN[2].worldPos;
-			OUT.v0_id = IN[0].id;
+			OUT.id = float3(IN[0].id, IN[1].id, IN[2].id);
+			/*OUT.v0_id = IN[0].id;
 			OUT.v1_id = IN[1].id;
-			OUT.v2_id = IN[2].id;
+			OUT.v2_id = IN[2].id;*/
 			tristream.Append(OUT);
 
 			//tristream.RestartStrip();
@@ -129,26 +133,25 @@
 		{
 			uint i;
 			int VertInclude_id[300];
-			//for (i = 0; i < 300; i++)
-			//	VertInclude_id[i] = -1;
 			uint VertInclude_len = 0;
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			///圖一(頂點ID找多個id)1000*84
-			uint width = floor(vertice_count * _EVRN/4.0+1);//無條件進位
+			uint width = floor(O_vertice_count * _EVRN/4.0+1);//無條件進位
 			uint height = 1;
 			if (width > SYSTEM_MAX_TEXTURE_SIZE) {
 				height = width / SYSTEM_MAX_TEXTURE_SIZE + 1;
 				width = SYSTEM_MAX_TEXTURE_SIZE;
 			}
-
+			
 			for (uint j = 0; j < 3; j++) {		//3頂點跑三次
-				for (i = 0; i < _EVRN; i++)
+				//for (i = 0; i < _EVRN; i++)
+				for (i = 0; i < 85; i++)
 				{
 					uint placeNO = 0;
-					if (j == 0)placeNO = IN.v0_id * _EVRN + i;
-					else if (j == 1)placeNO = IN.v1_id * _EVRN + i;
-					else if (j == 2)placeNO = IN.v2_id * _EVRN + i;
+					if (j == 0)placeNO = IN.id.x * _EVRN + i;
+					else if (j == 1)placeNO = IN.id.y * _EVRN + i;
+					else if (j == 2)placeNO = IN.id.z * _EVRN + i;
 
 					//STEP 1；用目前頂點的id，對應Group_array，找到多個simpleModel下的點id
 					uint index = floor(placeNO / 4.0);
@@ -158,16 +161,17 @@
 					float4 value = tex2D(M2M_array, float2(index_x, index_y)).rgba;
 
 					int GetValue_idNum = 0;
-					if (placeNO % 4 == 0) GetValue_idNum = floor(value.r*S_len + 0.5) - 1;
-					else if (placeNO % 4 == 1) GetValue_idNum = floor(value.g*S_len + 0.5) - 1;
-					else if (placeNO % 4 == 2) GetValue_idNum = floor(value.b*S_len + 0.5) - 1;
-					else if (placeNO % 4 == 3) GetValue_idNum = floor(value.a*S_len + 0.5) - 1;
+					if (placeNO % 4 == 0) GetValue_idNum = floor(value.r*(S_len + 1) + 0.5) - 1;
+					else if (placeNO % 4 == 1) GetValue_idNum = floor(value.g*(S_len + 1) + 0.5) - 1;
+					else if (placeNO % 4 == 2) GetValue_idNum = floor(value.b*(S_len + 1) + 0.5) - 1;
+					else if (placeNO % 4 == 3) GetValue_idNum = floor(value.a*(S_len + 1) + 0.5) - 1;
 					if (GetValue_idNum == -1)break;
 
-					
+					VertInclude_id[VertInclude_len] = GetValue_idNum;
+					VertInclude_len++;
 					if(VertInclude_len==0) {
 						VertInclude_id[VertInclude_len] = GetValue_idNum;
-						VertInclude_len= VertInclude_len+1;
+						VertInclude_len++;
 					}
 					else {
 						bool isRepeat = false;
@@ -226,9 +230,6 @@
 			fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir*0.5));
 
 			fixed3 orign_color = ambient + diffuse;
-			/*if (heat == 0) {
-				return fixed4(orign_color, 1.0);
-			}*/
 			heat = clamp(heat, 0, 0.99);
 			float3 color =(1- heat)* orign_color + heat * tex2D(_HeatMapTex,fixed2(heat,0.5));			//_HeatMapTex是一個色階圖。 tex2D 二维纹理查询，此點彩色x看heat值，y為0.5不變
 

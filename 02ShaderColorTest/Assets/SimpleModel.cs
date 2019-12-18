@@ -1,6 +1,7 @@
 ﻿//附在每一個物件上
 //當raycast點到某物件時，就會呼叫此物件的NewChange()
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //簡化後模型
@@ -35,21 +36,19 @@ public class SimpleModel : MonoBehaviour
     {
         ModelName = name;
         Init_S_NoteBook();
-        S_NoteBook.m_Data.hey_need_update = true;
     }
-
 
     //清空所有值
     private void Init_S_NoteBook()
     {
+        S_NoteBook = Resources.Load<SimpleModelRecord>("SimpleModelRecord/" + name);
         if (S_NoteBook == null)
         {
-            S_NoteBook = Resources.Load<SimpleModelRecord>("SimpleModelRecord/" + name );
-            if (S_NoteBook == null)
-            {
-                Debug.LogError("這個model沒有自己的SimpleModelRecord檔案(必須放在SimpleModelRecord資料夾下，且檔案名稱與物件名稱相同)");
-                return;
-            }
+            SimpleModelRecord NewFile = new SimpleModelRecord();
+            AssetDatabase.CreateAsset(NewFile, "Assets/Resources/SimpleModelRecord/" + name + ".asset");
+            //Debug.LogError("這個model沒有自己的SimpleModelRecord檔案(必須放在Resources/SimpleModelRecord資料夾下，且檔案名稱與物件名稱相同)");
+            Debug.LogWarning("以自動建立一個OrignModelRecord檔案>>" + name + ".asset" + "，放在Resources/SimpleModelRecord資料夾下");
+            S_NoteBook = Resources.Load<SimpleModelRecord>("SimpleModelRecord/" + name);
         }
 
         //裡面已經有資料
@@ -83,13 +82,19 @@ public class SimpleModel : MonoBehaviour
 
         //count
         S_NoteBook.m_Data.count = new float[len];
+        Init_Count();
 
         //Init Record vertices
         for (int i = 0; i < len; i++)
-        {
             S_NoteBook.m_Data.vertices_world[i] = GetComponent<Collider>().transform.TransformPoint(S_NoteBook.m_Data.vertices_local[i]);
+    }
+
+    public void Init_Count()
+    {
+        //Init Record vertices
+        for (int i = 0; i < S_NoteBook.m_Data.count.Length; i++)
             S_NoteBook.m_Data.count[i] = 0;
-        }
+        S_NoteBook.m_Data.hey_need_update = true;
     }
 
     /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

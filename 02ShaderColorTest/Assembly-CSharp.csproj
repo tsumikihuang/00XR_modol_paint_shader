@@ -99,6 +99,7 @@
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
     <None Include="Assets\Materials\NoColor.shader" />
     <None Include="Assets\Materials\HeatMap.shader" />
+    <None Include="Assets\Materials\DrawAllS_Vert.shader" />
     <None Include="Assets\Materials\white.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/GitHub/modol_paint_shader/02ShaderColorTest/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

@@ -22,17 +22,15 @@ public class point_info
 public class Raycast : MonoBehaviour
 {
     #region 可調變數們
-        [Range(0.5f, 10f)]
-        public float Eye_Influence_Radius = 5;
+    [Range(0.5f, 10f)]
+    public float Eye_Influence_Radius = 2;
 
-        //高斯函數參數：https://www.geogebra.org/graphing/kxg6mru2
-        [Range(0.1f, 5f)]
-        //最高y值
-        public float Gaus_a = 1.0f;
-        //中心位移
-        private const float Gaus_b = 0.0f;
-        [Range(0.1f, 5f)]
-        public float Gaus_c = 3.0f;
+    //高斯函數參數：https://www.geogebra.org/graphing/kxg6mru2
+    [Range(0.1f, 5f)]
+    //最高y值
+    public float Gaus_a = 1.0f;
+    [Range(0.1f, 5f)]
+    public float Gaus_c = 3.0f;
     #endregion
 
     public static point_info[] All_Vertices;
@@ -58,7 +56,7 @@ public class Raycast : MonoBehaviour
 
         //STEP 2 --- 建立所有頂點的 KD Tree
         Create_All_Vertice_Tree();
-        
+
     }
 
     void reCalculateKBV_Model()
@@ -156,7 +154,7 @@ public class Raycast : MonoBehaviour
 
             float x = Vector3.Distance(tempP.point, point);
             //高斯函數(x軸-->距離，y軸-->weight)
-            float Gaussian_func = Gaus_a * (float)Math.Exp(0 - Math.Pow(x - Gaus_b, 2) / (2 * Gaus_c * Gaus_c));
+            float Gaussian_func = Gaus_a * (float)Math.Exp(0 - Math.Pow(x, 2) / (2 * Gaus_c * Gaus_c));
             tempP.weight = Gaussian_func;
 
             KDT_FindVertices[i] = tempP;
@@ -168,15 +166,16 @@ public class Raycast : MonoBehaviour
         //第一層---判斷vertex normal 是否朝向 camera
         Vector3 nowVerticeWorldPos = p.point;
         Vector3 pointCameraDirection = cam.transform.position - nowVerticeWorldPos;
-        if (Vector3.Dot(cam.transform.forward, pointCameraDirection) > 0)
-            return false;
+        /*if (Vector3.Dot(cam.transform.forward, pointCameraDirection) > 0)
+            return false;*/
 
         //第二層---vertex是否在screen上可被見(從該點發射射線往cemera
         RaycastHit temp_hit;
         if (Physics.Raycast(nowVerticeWorldPos, pointCameraDirection, out temp_hit))
             if (temp_hit.transform.tag == "cameraBackWall")
                 return true;
-        return false;
+        return true;
+        //return false;
     }
 
     void UpdateSimpleModelRecordCount()
@@ -213,6 +212,24 @@ public class Raycast : MonoBehaviour
         //上色點
         for (int i = 0; i < KDT_FindVertices.Length; i++)
         {
+            switch (i)
+            {
+                case 0:
+                    Gizmos.color = Color.red;
+                    break;
+                case 1:
+                    Gizmos.color = Color.black;
+                    break;
+                case 2:
+                    Gizmos.color = Color.blue;
+                    break;
+                case 3:
+                    Gizmos.color = Color.yellow;
+                    break;
+                case 4:
+                    Gizmos.color = Color.green;
+                    break;
+            }
             if (KDT_FindVertices[i] == null) continue;
             Gizmos.DrawCube(KDT_FindVertices[i].point, 2f * size);
         }
@@ -228,6 +245,6 @@ public class Raycast : MonoBehaviour
 public class time_info
 {
     public float delta_time;    //紀錄與上一個紀錄相差(經過)多少時間
-    public float[] all_vertice_count;
+    public float[] all_O_vertice_count;
 }
 

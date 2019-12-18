@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEditor;
+using UnityEngine;
 
 //原始模型
 //負責上色，把上色資料傳給Shader
@@ -10,49 +12,55 @@ public class OrignModel : MonoBehaviour
     private Simple_Data S_NoteBook_Data;
 
     private OrignModelRecord O_NoteBook;      //儲存模型資料的 ScriptableObject
+    private Orign_Data O_Data;
     private Material O_Material;
     public float O2S_Radius;
-    public float ShaderRadius;
+    public float ShaderRadius=0.5f;
+    private bool ShaderValueIsPassed = false;
 
     private void Awake()
     {
         SYSTEM_MAX_TEXTURE_SIZE = SystemInfo.maxTextureSize;                //通常為16384
 
         O_Material = this.GetComponent<Renderer>().material;
-        ShaderRadius = O2S_Radius;
+        //ShaderRadius = O2S_Radius/2;
         Init_OrignModelRecord();
-        S_NoteBook_Data = S_Model.Get_S_NoteBook().m_Data;
     }
-
+    private void Start()
+    {
+        S_NoteBook_Data = S_Model.Get_S_NoteBook().m_Data;
+        S_NoteBook_Data.hey_need_update = true;
+    }
     private void Update()
     {
-        //CheckChange();
+        //這個只需做一次
+        if (!ShaderValueIsPassed && O_Data.M2M_PassToShader != null)
+        {
+            PassM2M_OneTime();
+            ShaderValueIsPassed = true;
+        }
+
+        CheckChange();
     }
 
     public void CheckChange()
     {
         if (S_NoteBook_Data.hey_need_update)
         {
-            //print("Orign model paint!!");
-
             S_NoteBook_Data.hey_need_update = false;
-            if (O_NoteBook.m_Data.M2M_PassToShader != null)
+            if (O_Data.M2M_PassToShader != null)
                 NewChange();
         }
     }
-
-    private void NewChange()
+    public void PassM2M_OneTime()
     {
-        O_Material.SetTexture("SimpleModel_vertexINFO_array", Doing_S_Model_Pass_Vertices());
-        O_Material.SetTexture("M2M_array", Draw_with_dynamic_array_FA(O_NoteBook.m_Data.M2M_PassToShader, "debug"));
+        O_Material.SetInt("_EVRN", O_Data.EVRN);
+        O_Material.SetTexture("M2M_array", Draw_with_dynamic_array_FA(O_Data.M2M_PassToShader, "debug"));
 
+        //固定只需要傳一次的值
         O_Material.SetInt("SYSTEM_MAX_TEXTURE_SIZE", SYSTEM_MAX_TEXTURE_SIZE);
-
         O_Material.SetInt("S_len", S_NoteBook_Data.number_of_vertices);
-        O_Material.SetInt("vertice_count", O_NoteBook.m_Data.number_of_vertices);
-        O_Material.SetInt("_EVRN", O_NoteBook.m_Data.EVRN);
-        O_Material.SetFloat("_Radius", ShaderRadius);
-
+        O_Material.SetInt("O_vertice_count", O_Data.number_of_vertices);
         O_Material.SetFloat("_MinX", S_NoteBook_Data.MinElement_x);
         O_Material.SetFloat("_RangeX", 100);
         O_Material.SetFloat("_MinY", S_NoteBook_Data.MinElement_y);
@@ -62,34 +70,38 @@ public class OrignModel : MonoBehaviour
         O_Material.SetFloat("_MinW", S_NoteBook_Data.MinElement_count);
         O_Material.SetFloat("_RangeW", 10);
 
-        //O_Material.SetFloat("_MaxCount", );
-
     }
-
+    private void NewChange()
+    {
+        O_Material.SetTexture("SimpleModel_vertexINFO_array", Doing_S_Model_Pass_Vertices());
+        O_Material.SetFloat("_Radius", ShaderRadius);
+    }
 
     public void Delete_M2M()
     {
-        O_NoteBook.m_Data.M2M_PassToShader = null;
+        O_Data.M2M_PassToShader = null;
     }
+
     public float[] Read_M2M_PassToShader()
     {
         if (O_NoteBook == null)
             return null;
-        if (O_NoteBook.m_Data.M2M_PassToShader == null)
+        if (O_Data.M2M_PassToShader == null)
             return null;
-        if (O_NoteBook.m_Data.M2M_PassToShader.Length == 0)
+        if (O_Data.M2M_PassToShader.Length == 0)
             return null;
         else
-            return O_NoteBook.m_Data.M2M_PassToShader;
+            return O_Data.M2M_PassToShader;
     }
 
     public void Set_M2M_PassToShader(float[] Convert_KDTWVid_List_To_Array)
     {
-        O_NoteBook.m_Data.M2M_PassToShader = Convert_KDTWVid_List_To_Array;
+        O_Data.M2M_PassToShader = (float[])Convert_KDTWVid_List_To_Array.Clone();
     }
-    public void Set_EVRN(int max_count_id)
+
+    public void Set_EVRN(int max_id_count)
     {
-        O_NoteBook.m_Data.EVRN = max_count_id;
+        O_Data.EVRN = max_id_count;
     }
 
     public void OrignTexture()
@@ -108,23 +120,26 @@ public class OrignModel : MonoBehaviour
 
     private void Init_OrignModelRecord()
     {
+        O_NoteBook = Resources.Load<OrignModelRecord>("OrignModelRecord/" + name);
         if (O_NoteBook == null)
         {
-            O_NoteBook = Resources.Load<OrignModelRecord>("OrignModelRecord/" + name );
-            if (O_NoteBook == null)
-            {
-                Debug.LogError("這個model沒有自己的OrignModelRecord檔案(必須放在OrignModelRecord資料夾下，且檔案名稱與物件名稱相同)");
-                return;
-            }
+            OrignModelRecord NewFile = new OrignModelRecord();
+            AssetDatabase.CreateAsset(NewFile, "Assets/Resources/OrignModelRecord/" + name + ".asset");
+            //Debug.LogError("這個model沒有自己的OrignModelRecord檔案(必須放在OrignModelRecord資料夾下，且檔案名稱與物件名稱相同)");
+            Debug.LogWarning("以自動建立一個OrignModelRecord檔案>>" + name + ".asset" + "，放在Resources/OrignModelRecord資料夾下");
+            O_NoteBook = Resources.Load<OrignModelRecord>("OrignModelRecord/" + name);
         }
+
+        O_Data = O_NoteBook.m_Data;
+
         //裡面已經有資料
-        if (O_NoteBook.m_Data.Model_Name != "")
+        if (O_Data.Model_Name != "")
             return;
 
         //沒資料，初始
         //name
-        O_NoteBook.m_Data.Model_Name = name;
-        O_NoteBook.m_Data.M2M_PassToShader = null;
+        O_Data.Model_Name = name;
+        O_Data.M2M_PassToShader = null;
 
         MeshFilter O_Collider = GetComponent<MeshFilter>();
         if (O_Collider == null || O_Collider.sharedMesh == null)
@@ -133,15 +148,13 @@ public class OrignModel : MonoBehaviour
             return;
         }
         //vertices_local
-        O_NoteBook.m_Data.vertices_local = O_Collider.sharedMesh.vertices;
+        O_Data.vertices_local = O_Collider.sharedMesh.vertices;
         //number_of_vertices
-        int len = O_NoteBook.m_Data.number_of_vertices = O_Collider.sharedMesh.vertexCount;
+        int len = O_Data.number_of_vertices = O_Collider.sharedMesh.vertexCount;
         //vertices_world
-        O_NoteBook.m_Data.vertices_world = new Vector3[len];
+        O_Data.vertices_world = new Vector3[len];
         for (int i = 0; i < len; i++)
-        {
-            O_NoteBook.m_Data.vertices_world[i] = GetComponent<MeshFilter>().transform.TransformPoint(O_NoteBook.m_Data.vertices_local[i]);
-        }
+            O_Data.vertices_world[i] = GetComponent<MeshFilter>().transform.TransformPoint(O_Data.vertices_local[i]);
 
     }
 
@@ -155,7 +168,7 @@ public class OrignModel : MonoBehaviour
         if (pixel_num > SYSTEM_MAX_TEXTURE_SIZE)
             weight = SYSTEM_MAX_TEXTURE_SIZE;
         int height = pixel_num / SYSTEM_MAX_TEXTURE_SIZE + 1;
-        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBA32, false);
+        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBAFloat, false);
         input.filterMode = FilterMode.Point;
         input.wrapMode = TextureWrapMode.Clamp;
 
@@ -169,14 +182,15 @@ public class OrignModel : MonoBehaviour
                     input.SetPixel(i, j, new Color(0, 0, 0, 0));
                     continue;
                 }
-                float colorX = ConvertArray[pixel_index_x4];
-                float colorY = ConvertArray[pixel_index_x4 + 1];
-                float colorZ = ConvertArray[pixel_index_x4 + 2];
-                float colorW = ConvertArray[pixel_index_x4 + 3];
+                int range = S_NoteBook_Data.number_of_vertices + 1;
+                float colorX = ConvertArray[pixel_index_x4] / range;
+                float colorY = ConvertArray[pixel_index_x4 + 1] / range;
+                float colorZ = ConvertArray[pixel_index_x4 + 2] / range;
+                float colorW = ConvertArray[pixel_index_x4 + 3] / range;
                 input.SetPixel(i, j, new Color(colorX, colorY, colorZ, colorW));
             }
         }
-        
+
         input.Apply();
         ////////////////////////////////////////////////////////////////////
         /*var bytes = input.EncodeToPNG();
@@ -185,8 +199,8 @@ public class OrignModel : MonoBehaviour
         {
             Directory.CreateDirectory(dirPath);
         }
-        File.WriteAllBytes(dirPath + "M2M_id" + ".png", bytes);
-        //File.WriteAllBytes(Application.dataPath + "/SaveImages/Image333.png", input.EncodeToPNG());*/
+        File.WriteAllBytes(dirPath + "M2M_id_23333" + ".png", bytes);*/
+        //File.WriteAllBytes(Application.dataPath + "/SaveImages/Image333.png", input.EncodeToPNG());
         ////////////////////////////////////////////////////////////////////
 
         return input;
@@ -224,14 +238,14 @@ public class OrignModel : MonoBehaviour
         return Draw_with_dynamic_array_V4(format, "_DebugName");
     }
 
-    private Texture2D Draw_with_dynamic_array_V4(Vector4[] ConvertArray, string name)
+    private Texture2D Draw_with_dynamic_array_V4(Vector4[] ConvertArray, string debug_name)
     {
         int point_num = ConvertArray.Length;
         int weight = point_num;
         if (point_num > SYSTEM_MAX_TEXTURE_SIZE)
             weight = SYSTEM_MAX_TEXTURE_SIZE;
         int height = point_num / SYSTEM_MAX_TEXTURE_SIZE + 1;
-        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBA32, false);
+        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBAFloat, false);
         input.filterMode = FilterMode.Point;
         input.wrapMode = TextureWrapMode.Clamp;
 
@@ -260,8 +274,8 @@ public class OrignModel : MonoBehaviour
         {
             Directory.CreateDirectory(dirPath);
         }
-        File.WriteAllBytes(dirPath + "S_Model_Pos_Count" + ".png", bytes);
-        //File.WriteAllBytes(Application.dataPath + "/SaveImages/Image333.png", input.EncodeToPNG());*/
+        File.WriteAllBytes(dirPath + "S_Model_Pos_Count" + ".png", bytes);*/
+        //File.WriteAllBytes(Application.dataPath + "/SaveImages/Image333.png", input.EncodeToPNG());
         ////////////////////////////////////////////////////////////////////
 
         return input;

@@ -49,8 +49,11 @@ public class SimpleModelEditor : Editor
             EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
 
             if (GUILayout.Button("創建 OrignModel to SimpleModel 對應資料"))
+            {
                 M2M_KDT_Search.instance.Generate_M2M(O_Model, O_Model.S_Model, O_Model.O2S_Radius);
-            EditorGUI.EndDisabledGroup();
+                O_Model.PassM2M_OneTime();
+            }
+        EditorGUI.EndDisabledGroup();
         #endregion
 
         # region 創建好M2M資料的話...
@@ -59,9 +62,12 @@ public class SimpleModelEditor : Editor
                 O_Model.Delete_M2M();
 
             // Slider(標題, 預設值, 最小值, 最大值)，滑桿元件
-            O_Model.ShaderRadius = EditorGUILayout.Slider("Shader上色半徑", O_Model.O2S_Radius/2, 0, O_Model.O2S_Radius); //不可超過M2M時計算的半徑範圍
+            O_Model.ShaderRadius = EditorGUILayout.Slider("Shader上色半徑", O_Model.ShaderRadius, 0, O_Model.O2S_Radius); //不可超過M2M時計算的半徑範圍
             EditorGUI.EndDisabledGroup();
         #endregion
+
+        if (GUILayout.Button("清空熱點(上色)資料"))
+            O_Model.S_Model.Init_Count();
 
         /***********************************************************************************************************************************/
         /***********************************************************************************************************************************/
