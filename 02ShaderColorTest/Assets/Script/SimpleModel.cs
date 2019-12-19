@@ -104,7 +104,7 @@ public class SimpleModel : MonoBehaviour
     {
         return S_NoteBook;
     }
-
+    /*
     //取得所有count!!!!!!
     public float[] GetAllVerticeCount()
     {
@@ -127,5 +127,5 @@ public class SimpleModel : MonoBehaviour
     {
         return S_NoteBook.m_Data.History;
     }
-
+    */
 }

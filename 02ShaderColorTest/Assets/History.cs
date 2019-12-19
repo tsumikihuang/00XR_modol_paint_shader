@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class History : MonoBehaviour
 {
     public GameObject model;
-
+    public static float totalTime;
     public static History instance;
     private void Awake()
     {
@@ -20,20 +20,22 @@ public class History : MonoBehaviour
         }
     }
 
-    SimpleModel result_noteBook;
+    Simple_Data result_noteBook;
     List<time_info> model_history;
     private void Start()
     {
-        result_noteBook = model.transform.Find("gargoyle_simple").gameObject.GetComponent<SimpleModel>();
-        model_history = result_noteBook.GetHistory();
-
+        result_noteBook = model.transform.Find("bunny_500").gameObject.GetComponent<SimpleModel>().Get_S_NoteBook().m_Data;
+        model_history = result_noteBook.History;
+        for (int i = 0; i < model_history.Count; i++)
+        {
+            totalTime += model_history[i].delta_time;
+        }
     }
 
 
     public void UseHistory(float Time)
     {
-        result_noteBook.SetAllVerticeCount(model_history[0].all_O_vertice_count);
-        
+        result_noteBook.count=model_history[0].all_vertice_count;
         float END_Time = 0;
         int id = model_history.Count-1;
         for (int i = 0; i < model_history.Count; i++)
@@ -45,22 +47,9 @@ public class History : MonoBehaviour
                 break;
             }
         }
-        Debug.Log(id);
-        result_noteBook.SetAllVerticeCount(model_history[id].all_O_vertice_count);
-        //result_noteBook.NewChange();
 
-        /*if ((float)Convert.ToDouble(OnValueChangedText.ValueText.text)!= select_Time && select_Time<=END_Time)
-        {
-            select_Time = (float)Convert.ToDouble(OnValueChangedText.ValueText.text);//若timeline選定成不同時間
-            Debug.Log(OnValueChangedText.ValueText.text);
-            float cumTime = 0;
-            for (int j = 0; j < model_history.Count; j++)//尋找選定時間的history
-            {
-                cumTime += model_history[j].delta_time;
-                //if(cumTime)//如果
-
-            }
-        }*/
+        result_noteBook.count = model_history[id].all_vertice_count;
+        result_noteBook.hey_need_update = true;
 
     }
 }

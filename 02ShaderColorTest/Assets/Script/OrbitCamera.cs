@@ -7,22 +7,25 @@ public class OrbitCamera : MonoBehaviour
     private float distance = 8.0f;
 
     [Header("Drag Parameter")]
-    public float xSpeed = 70.0f;
-    public float ySpeed = 50.0f;
-    public float yMinLimit = 0f;
-    public float yMaxLimit = 90f;
+    private float xSpeed = 70.0f;
+    private float ySpeed = 50.0f;
+    private float yMinLimit = 0f;
+    private float yMaxLimit = 90f;
 
-    private float x = 0.0f;
-    private float y = 0.0f;
+    private float x ;
+    private float y ;
+
+    public float dx=-5;
+    public float dy=1;
 
     private float fx = 0f;
     private float fy = 0f;
     private float fDistance = 0;
 
     [Header("ScrollWheel Parameter")]
-    public float zoomSpeed = 0.5f;
-    public float minDistance = 0.5f;
-    public float maxDistance = 50.0f;
+    private float zoomSpeed = 2;
+    public float minDistance = 30.0f;
+    private float maxDistance = 500.0f;
     private float m_targetDistance = 0;
 
     void Start()
@@ -89,7 +92,7 @@ public class OrbitCamera : MonoBehaviour
         if (target)
         {
             Quaternion rotation = Quaternion.Euler(fy, fx, 0);
-            Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
+            Vector3 negDistance = new Vector3(dx, dy, -distance);
 
             /* Quaternion * Vector3    >>  下個位置變化方向，Vector3进行一次Quaternion 旋转
              * 

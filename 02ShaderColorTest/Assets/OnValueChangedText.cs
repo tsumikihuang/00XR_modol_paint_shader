@@ -19,6 +19,5 @@ public class OnValueChangedText : MonoBehaviour
     public void OnSliderValueChanged(float value)
     {
         ValueText.text = value.ToString("0.00");//取到小數第二位
-        History.instance.UseHistory(value);
     }
 }

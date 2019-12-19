@@ -21,6 +21,7 @@ public class point_info
 
 public class Raycast : MonoBehaviour
 {
+    private float lastTime;
     #region 可調變數們
     [Range(0.5f, 10f)]
     public float Eye_Influence_Radius = 2;
@@ -48,6 +49,7 @@ public class Raycast : MonoBehaviour
 
     void Start()
     {
+        lastTime = Time.time;
         cam = GetComponent<Camera>();
         //planes = GeometryUtility.CalculateFrustumPlanes(cam);
 
@@ -187,12 +189,33 @@ public class Raycast : MonoBehaviour
             int temp_id = KDT_FindVertices[i].KBV_M_V_C_R_id;
             All_SimpleData[temp_id].count[KDT_FindVertices[i].vertex_index] += KDT_FindVertices[i].weight;
             All_SimpleData[temp_id].hey_need_update = true;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //處理(紀錄)時間軸
+            time_info temp_time_info = new time_info();
+            float nowTime = Time.time;
+            temp_time_info.delta_time = nowTime - lastTime;
+            lastTime = nowTime;
+            temp_time_info.all_vertice_count = (float[])All_SimpleData[temp_id].count.Clone();
+
+            temp_time_info.delta_vertice_count = new float[All_SimpleData[temp_id].number_of_vertices];
+            if (All_SimpleData[temp_id].History.Count > 0)    //若history為0則不能減
+            {
+                time_info Last_history;
+                Last_history = All_SimpleData[temp_id].History[All_SimpleData[temp_id].History.Count - 1];
+
+                for (int j = 0; j < temp_time_info.delta_vertice_count.Length; j++)
+                {
+                    temp_time_info.delta_vertice_count[j] = All_SimpleData[temp_id].count[j] - Last_history.all_vertice_count[j];
+                }
+            }
+            else
+                temp_time_info.delta_vertice_count = All_SimpleData[temp_id].count;
+            All_SimpleData[temp_id].History.Add(temp_time_info);
         }
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void OnDrawGizmos()
     {
@@ -245,6 +268,6 @@ public class Raycast : MonoBehaviour
 public class time_info
 {
     public float delta_time;    //紀錄與上一個紀錄相差(經過)多少時間
-    public float[] all_O_vertice_count;
+    public float[] all_vertice_count;
+    public float[] delta_vertice_count;
 }
-

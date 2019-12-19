@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ChangeScene.cs" />
     <Compile Include="Assets\Datastructures\Heap\BaseHeap.cs" />
     <Compile Include="Assets\Datastructures\Heap\KSmallest.cs" />
     <Compile Include="Assets\Datastructures\Heap\MaxHeap.cs" />
@@ -79,17 +80,22 @@
     <Compile Include="Assets\Datastructures\Tests\HeapTests.cs" />
     <Compile Include="Assets\Datastructures\Tests\KDTreeBenchmark.cs" />
     <Compile Include="Assets\Datastructures\Tests\KDTreeQueryTests.cs" />
-    <Compile Include="Assets\Example.cs" />
     <Compile Include="Assets\History.cs" />
-    <Compile Include="Assets\M2M_KDT_Search.cs" />
-    <Compile Include="Assets\M2MRecord.cs" />
+    <Compile Include="Assets\History_Button.cs" />
+    <Compile Include="Assets\History_Range.cs" />
     <Compile Include="Assets\OnValueChangedText.cs" />
-    <Compile Include="Assets\OrbitCamera.cs" />
-    <Compile Include="Assets\OrignModel.cs" />
-    <Compile Include="Assets\Raycast.cs" />
+    <Compile Include="Assets\OnValueChangedText1.cs" />
+    <Compile Include="Assets\OnValueChangedText2.cs" />
+    <Compile Include="Assets\RangeSlider.cs" />
     <Compile Include="Assets\Resources\OrignModelRecord\OrignModelRecord.cs" />
     <Compile Include="Assets\Resources\SimpleModelRecord\SimpleModelRecord.cs" />
-    <Compile Include="Assets\SimpleModel.cs" />
+    <Compile Include="Assets\Script\Example.cs" />
+    <Compile Include="Assets\Script\M2M_KDT_Search.cs" />
+    <Compile Include="Assets\Script\M2MRecord.cs" />
+    <Compile Include="Assets\Script\OrbitCamera.cs" />
+    <Compile Include="Assets\Script\OrignModel.cs" />
+    <Compile Include="Assets\Script\Raycast.cs" />
+    <Compile Include="Assets\Script\SimpleModel.cs" />
     <Compile Include="Assets\StateBoard.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />

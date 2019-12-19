@@ -245,7 +245,7 @@ public class OrignModel : MonoBehaviour
         if (point_num > SYSTEM_MAX_TEXTURE_SIZE)
             weight = SYSTEM_MAX_TEXTURE_SIZE;
         int height = point_num / SYSTEM_MAX_TEXTURE_SIZE + 1;
-        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBAFloat, false);
+        Texture2D input = new Texture2D(weight, height, TextureFormat.RGBA32, false);
         input.filterMode = FilterMode.Point;
         input.wrapMode = TextureWrapMode.Clamp;
 
