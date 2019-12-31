@@ -41,6 +41,7 @@
 		uniform uint S_len;
 		uniform uint O_vertice_count;
 		uniform uint _EVRN;
+		uniform uint _Max;
 
 		uniform float _Radius;
 		//uniform float _MaxCount;
@@ -208,7 +209,7 @@
 
 				//Count
 				float count = value.a;
-				if (count == 0.00f)continue;
+				if (count < 0.000001f)continue;
 
 				float3 temp_point;
 				temp_point.x = value.r*_RangeX + _MinX;
@@ -218,8 +219,11 @@
 				if (dis < _Radius)
 				{
 					//float ratio = 1 - saturate(dis / _Radius);				// ratio比例 ; saturate取 0 ~ 1。越近中心點 ratio為 1
-					float ratio = 1 / dis;
-					heat += count * ratio;							// 熱度 = 亮度??(改成次數占比) * 距離比例
+					//float ratio = 1 / dis;
+					//float ratio = 1 / pow(dis,2.5);
+					float ratio = 1 - saturate(dis / _Radius);
+
+					heat += count * ratio*5;							// 熱度 = 亮度??(改成次數占比) * 距離比例
 				}
 			}
 
@@ -230,8 +234,9 @@
 			fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir*0.5));
 
 			fixed3 orign_color = ambient + diffuse;
+			heat = heat / _Max;
 			heat = clamp(heat, 0, 0.99);
-			float3 color =(1- heat)* orign_color + heat * tex2D(_HeatMapTex,fixed2(heat,0.5));			//_HeatMapTex是一個色階圖。 tex2D 二维纹理查询，此點彩色x看heat值，y為0.5不變
+			float3 color =saturate(0.8- heat)* orign_color + saturate(0.2+heat) * tex2D(_HeatMapTex,fixed2(heat,0.5));			//_HeatMapTex是一個色階圖。 tex2D 二维纹理查询，此點彩色x看heat值，y為0.5不變
 
 			//color.a = _Alpha;
 			return fixed4(color, 1.0);

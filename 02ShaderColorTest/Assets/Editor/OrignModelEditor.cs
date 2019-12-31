@@ -37,6 +37,9 @@ public class SimpleModelEditor : Editor
             O_Model.S_Model = (SimpleModel)EditorGUILayout.ObjectField(O_Model.S_Model, typeof(SimpleModel), true);
 
             EditorGUILayout.Space();
+        
+            if(O_Model.Read_M2M_PassToShader() == null)
+                EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
 
             // 從 BeginDisabledGroup(Boolean) 到 EndDisabledGroup() 中間的範圍是否可以被選取
             // 取決於 BeginDisabledGroup 傳入的布林參數
@@ -45,8 +48,6 @@ public class SimpleModelEditor : Editor
             // FloatField(標題, 預設值)，浮點數輸入元件
             // 原本的目標物件(Camera)裡的變數都要設定為 Inspector 欄位中修改的數值
             O_Model.O2S_Radius = EditorGUILayout.FloatField("參考熱點半徑範圍(可小數)", O_Model.O2S_Radius);
-
-            EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
 
             if (GUILayout.Button("創建 OrignModel to SimpleModel 對應資料"))
             {
@@ -57,17 +58,19 @@ public class SimpleModelEditor : Editor
         #endregion
 
         # region 創建好M2M資料的話...
-            EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader()==null);
+            //EditorGUI.BeginDisabledGroup(O_Model.Read_M2M_PassToShader()==null);
             if (GUILayout.Button("刪除目前 OrignModel to SimpleModel 對應資料"))
                 O_Model.Delete_M2M();
 
             // Slider(標題, 預設值, 最小值, 最大值)，滑桿元件
             O_Model.ShaderRadius = EditorGUILayout.Slider("Shader上色半徑", O_Model.ShaderRadius, 0, O_Model.O2S_Radius); //不可超過M2M時計算的半徑範圍
-            EditorGUI.EndDisabledGroup();
+
+            O_Model.Max = (int)EditorGUILayout.Slider("紅色熱度資訊", O_Model.Max, 1, 100);
+            //EditorGUI.EndDisabledGroup();
         #endregion
 
         if (GUILayout.Button("清空熱點(上色)資料"))
-            O_Model.S_Model.Init_Count();
+            O_Model.S_Model.Init_Count_And_History();
 
         /***********************************************************************************************************************************/
         /***********************************************************************************************************************************/

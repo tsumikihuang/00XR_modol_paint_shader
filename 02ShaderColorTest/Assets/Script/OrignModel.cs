@@ -16,6 +16,7 @@ public class OrignModel : MonoBehaviour
     private Material O_Material;
     public float O2S_Radius;
     public float ShaderRadius=0.5f;
+    public int Max=10;
     private bool ShaderValueIsPassed = false;
 
     private void Awake()
@@ -75,6 +76,7 @@ public class OrignModel : MonoBehaviour
     {
         O_Material.SetTexture("SimpleModel_vertexINFO_array", Doing_S_Model_Pass_Vertices());
         O_Material.SetFloat("_Radius", ShaderRadius);
+        O_Material.SetInt("_Max", Max);
     }
 
     public void Delete_M2M()

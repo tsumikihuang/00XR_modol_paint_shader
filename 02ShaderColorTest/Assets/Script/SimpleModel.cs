@@ -82,19 +82,20 @@ public class SimpleModel : MonoBehaviour
 
         //count
         S_NoteBook.m_Data.count = new float[len];
-        Init_Count();
+        Init_Count_And_History();
 
         //Init Record vertices
         for (int i = 0; i < len; i++)
             S_NoteBook.m_Data.vertices_world[i] = GetComponent<Collider>().transform.TransformPoint(S_NoteBook.m_Data.vertices_local[i]);
     }
 
-    public void Init_Count()
+    public void Init_Count_And_History()
     {
         //Init Record vertices
         for (int i = 0; i < S_NoteBook.m_Data.count.Length; i++)
             S_NoteBook.m_Data.count[i] = 0;
         S_NoteBook.m_Data.hey_need_update = true;
+        S_NoteBook.m_Data.History = new List<time_info>();
     }
 
     /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
