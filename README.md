@@ -48,7 +48,7 @@ VR頭盔，並且運用該頭盔所偵測到的使用者觀看射線，將視線
 shader對每個頂點計算熱力顏色後進行內差(圖二)，或是在
 fragment shader階段，針對每個fragment去尋找鄰近的熱點(圖
 三)。。。等方法。
-
+![image](https://github.com/tsumikihuang/00XR_modol_paint_shader/blob/master/%E5%9C%96%E7%89%871.png)
 最後，我們採用混合做法，在vertex shader中紀錄鄰近的視線熱
 點資訊，並在fragment shader中進行實際顏色的計算。兼顧效能
 跟繪製品質。(如圖四)
@@ -56,6 +56,7 @@ fragment shader階段，針對每個fragment去尋找鄰近的熱點(圖
 
 ## 系統架構圖
 
+![image](https://github.com/tsumikihuang/00XR_modol_paint_shader/blob/master/%E5%9C%96%E7%89%872.png)
 
 ## 成果說明
 • 即時熱力圖：
@@ -71,3 +72,7 @@ fragment shader階段，針對每個fragment去尋找鄰近的熱點(圖
 使用者的觀測完畢後，可透過時間軸回放，在不同時間點下物件
 的熱力圖呈現情形。亦可抓取一段時間範圍中，觀察軌跡的分布
 是如何移動。
+
+## 未來展望
+興趣點統計：
+為了方便更有效的統計使用者觀看狀況，本系統預計提供讓教師標註多個興趣區ROI的功能，透過讓老師標註ROI，我們可以統計使用者觀看這些ROI的狀況，如滯留時間、進出次數、觀看時的專注度等資訊。
