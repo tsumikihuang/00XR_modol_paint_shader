@@ -76,3 +76,7 @@ fragment shader階段，針對每個fragment去尋找鄰近的熱點(圖
 ## 未來展望
 興趣點統計：
 為了方便更有效的統計使用者觀看狀況，本系統預計提供讓教師標註多個興趣區ROI的功能，透過讓老師標註ROI，我們可以統計使用者觀看這些ROI的狀況，如滯留時間、進出次數、觀看時的專注度等資訊。
+
+
+![image](https://github.com/tsumikihuang/00XR_modol_paint_shader/blob/master/%E6%88%90%E6%9E%9C%E5%B1%95%E5%90%88%E7%85%A7.jpg)
+
