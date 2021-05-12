@@ -80,6 +80,7 @@
 
 
 # Costom
+02ShaderColorTest/[Aa]ssets/[Ss]treamingAssets/build_info
 02ShaderColorTest/[Aa]ssets/[Ss]treamingAssets/*
 02ShaderColorTest/*.api
 02ShaderColorTest/*.api.meta
