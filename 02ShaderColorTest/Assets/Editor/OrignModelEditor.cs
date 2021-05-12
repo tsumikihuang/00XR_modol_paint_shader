@@ -3,7 +3,7 @@ using UnityEngine;
 
 //顯示模型的客製化調整參數
 [CustomEditor(typeof(OrignModel))]
-public class SimpleModelEditor : Editor
+public class OrignModelEditor : Editor
 {
     private OrignModel O_Model;        //目前這個物件
     private bool _isOrignTexture = false;
@@ -37,9 +37,9 @@ public class SimpleModelEditor : Editor
             O_Model.S_Model = (SimpleModel)EditorGUILayout.ObjectField(O_Model.S_Model, typeof(SimpleModel), true);
 
             EditorGUILayout.Space();
-        
-            if(O_Model.Read_M2M_PassToShader() == null)
-                EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
+
+        if (O_Model.Read_M2M_PassToShader() == null)
+            EditorGUILayout.HelpBox("必須創建模型對應資料才能開始繪製！請點擊下方按鈕", MessageType.Warning);
 
             // 從 BeginDisabledGroup(Boolean) 到 EndDisabledGroup() 中間的範圍是否可以被選取
             // 取決於 BeginDisabledGroup 傳入的布林參數

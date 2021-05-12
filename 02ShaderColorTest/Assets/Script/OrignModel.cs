@@ -31,6 +31,12 @@ public class OrignModel : MonoBehaviour
     {
         S_NoteBook_Data = S_Model.Get_S_NoteBook().m_Data;
         S_NoteBook_Data.hey_need_update = true;
+
+        if (Read_M2M_PassToShader() == null)
+        {
+            Debug.LogError("此模型\""+gameObject.name+"\"必須創建模型對應資料才能開始繪製！請於Hierarchy視窗中點擊原始模型(OriginModel)再於Inspector視窗中按\"創建OriginModel to SimpleModel對應資料\"才可開始使用");
+        }
+
     }
     private void Update()
     {
